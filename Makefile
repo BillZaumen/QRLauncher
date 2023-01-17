@@ -49,8 +49,7 @@ CP = $(CP1):$(JLDIR)/core.jar:$(JLDIR)/javase.jar:classes
 ICON_WIDTHS = 8 16 20 22 24 32 36 48 64 72 96 128 192 256 512
 ICON_WIDTHS2x = 16 24 32 48 64 128 256
 
-all: qrlauncher.jar
-# all: qrlauncher.jar $(DEB) qrlauncher-install-$(VERSION).jar
+all: qrlauncher.jar $(DEB) qrlauncher-install-$(VERSION).jar
 
 qrlauncher.jar: QRLauncher.java QRLauncher.svg dndTarget.png
 	mkdir -p classes
