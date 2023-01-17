@@ -49,6 +49,8 @@ CP = $(CP1):$(JLDIR)/core.jar:$(JLDIR)/javase.jar:classes
 ICON_WIDTHS = 8 16 20 22 24 32 36 48 64 72 96 128 192 256 512
 ICON_WIDTHS2x = 16 24 32 48 64 128 256
 
+DEB = qrlauncher_$(VERSION)_all.deb
+
 all: qrlauncher.jar $(DEB) qrlauncher-install-$(VERSION).jar
 
 qrlauncher.jar: QRLauncher.java QRLauncher.svg dndTarget.png
@@ -98,7 +100,6 @@ install: qrlauncher.jar
 	rm changelog.gz
 	install -m 0644 copyright $(DOCDIR)
 
-DEB = qrlauncher_$(VERSION)_all.deb
 
 deb: $(DEB)
 
