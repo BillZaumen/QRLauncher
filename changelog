@@ -1,0 +1,11 @@
+qrlauncher (1.0) unstable; urgency=low
+
+  * Added a -d option to explicitly set the current working directory.
+
+ --  Bill Zaumen <bill.zaumen@gmail.com>  Sat, Jan 14 2023 14:50:00 -0800
+
+qrlauncher (0.5) unstable; urgency=low
+
+  * Created the initial version and a man page.
+
+ --  Bill Zaumen <bill.zaumen@gmail.com>  Sat, Jan 14 2023 14:50:00 -0800

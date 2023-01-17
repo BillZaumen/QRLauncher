@@ -1,0 +1,14 @@
+Package: qrlauncher
+Version: VERSION
+Section: contrib/utils
+Priority: optional
+Architecture: all
+Depends: default-jdk, libbzdev-java (>= 1.3.7), libzxing-core-java (>= 3.4.1), libzxing-java (>= 3.4.1), libzxing-javase-java (>=3.4.1)
+Maintainer: Bill Zaumen <bill.zaumen+software@gmail.com>
+Description: Utility that opens URLs in QR codes contained in images.
+ The image formats supported are those that Java recognizes, and there
+ is expected to be one QR code per image. The default browser will be used
+ to handle a URL's contents, provided that the Java implementation and
+ the desktop support that capability. One can provide the image files on
+ the command line or drag and drop, or copy and paste, the images files
+ into this application.

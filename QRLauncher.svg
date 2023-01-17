@@ -1,0 +1,1610 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="252"
+   height="252"
+   viewBox="0 0 252 252"
+   version="1.1"
+   id="svg443"
+   sodipodi:docname="QRLauncher.svg"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview445"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     width="512px"
+     fit-margin-top="10"
+     fit-margin-left="10"
+     fit-margin-right="10"
+     fit-margin-bottom="10"
+     inkscape:zoom="3.6163793"
+     inkscape:cx="128.44338"
+     inkscape:cy="140.74851"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg443" />
+  <text
+     xml:space="preserve"
+     style="font-weight:bold;font-size:96px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;fill:#00ffff;stroke-width:1"
+     x="174.89561"
+     y="247.40858"
+     id="text105178"><tspan
+       sodipodi:role="line"
+       id="tspan105176"
+       x="174.89561"
+       y="247.40858">R</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-weight:bold;font-size:96px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;fill:#00ffff;stroke-width:1"
+     x="-0.86868286"
+     y="81.623764"
+     id="text46075"><tspan
+       sodipodi:role="line"
+       id="tspan46073"
+       x="-0.86868286"
+       y="81.623764"
+       style="font-size:96px;fill:#00ffff">Q</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-weight:bold;font-size:96px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;fill:#00ffff;stroke-width:1"
+     x="96.292137"
+     y="176.22623"
+     id="text85959"><tspan
+       sodipodi:role="line"
+       id="tspan85957"
+       x="96.292137"
+       y="176.22623">L</tspan><tspan
+       sodipodi:role="line"
+       x="96.292137"
+       y="296.22623"
+       id="tspan93723" /></text>
+  <defs
+     id="defs5">
+    <rect
+       id="p"
+       width="8"
+       height="8"
+       x="0"
+       y="0" />
+  </defs>
+  <g
+     fill="#000000"
+     id="g439"
+     transform="translate(10,10)">
+    <use
+       xlink:href="#p"
+       x="32"
+       y="32"
+       id="use7"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="32"
+       y="40"
+       id="use9"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="32"
+       y="48"
+       id="use11"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="32"
+       y="56"
+       id="use13"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="32"
+       y="64"
+       id="use15"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="32"
+       y="72"
+       id="use17"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="32"
+       y="80"
+       id="use19"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="32"
+       y="96"
+       id="use21"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="32"
+       y="112"
+       id="use23"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="32"
+       y="128"
+       id="use25"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="32"
+       y="144"
+       id="use27"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="32"
+       y="152"
+       id="use29"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="32"
+       y="160"
+       id="use31"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="32"
+       y="168"
+       id="use33"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="32"
+       y="176"
+       id="use35"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="32"
+       y="184"
+       id="use37"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="32"
+       y="192"
+       id="use39"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="40"
+       y="32"
+       id="use41"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="40"
+       y="80"
+       id="use43"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="40"
+       y="96"
+       id="use45"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="40"
+       y="112"
+       id="use47"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="40"
+       y="120"
+       id="use49"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="40"
+       y="144"
+       id="use51"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="40"
+       y="192"
+       id="use53"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="48"
+       y="32"
+       id="use55"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="48"
+       y="48"
+       id="use57"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="48"
+       y="56"
+       id="use59"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="48"
+       y="64"
+       id="use61"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="48"
+       y="80"
+       id="use63"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="48"
+       y="96"
+       id="use65"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="48"
+       y="104"
+       id="use67"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="48"
+       y="112"
+       id="use69"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="48"
+       y="120"
+       id="use71"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="48"
+       y="128"
+       id="use73"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="48"
+       y="144"
+       id="use75"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="48"
+       y="160"
+       id="use77"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="48"
+       y="168"
+       id="use79"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="48"
+       y="176"
+       id="use81"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="48"
+       y="192"
+       id="use83"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="56"
+       y="32"
+       id="use85"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="56"
+       y="48"
+       id="use87"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="56"
+       y="56"
+       id="use89"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="56"
+       y="64"
+       id="use91"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="56"
+       y="80"
+       id="use93"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="56"
+       y="96"
+       id="use95"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="56"
+       y="104"
+       id="use97"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="56"
+       y="128"
+       id="use99"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="56"
+       y="144"
+       id="use101"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="56"
+       y="160"
+       id="use103"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="56"
+       y="168"
+       id="use105"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="56"
+       y="176"
+       id="use107"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="56"
+       y="192"
+       id="use109"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="64"
+       y="32"
+       id="use111"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="64"
+       y="48"
+       id="use113"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="64"
+       y="56"
+       id="use115"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="64"
+       y="64"
+       id="use117"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="64"
+       y="80"
+       id="use119"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="64"
+       y="144"
+       id="use121"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="64"
+       y="160"
+       id="use123"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="64"
+       y="168"
+       id="use125"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="64"
+       y="176"
+       id="use127"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="64"
+       y="192"
+       id="use129"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="72"
+       y="32"
+       id="use131"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="72"
+       y="80"
+       id="use133"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="72"
+       y="120"
+       id="use135"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="72"
+       y="144"
+       id="use137"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="72"
+       y="192"
+       id="use139"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="80"
+       y="32"
+       id="use141"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="80"
+       y="40"
+       id="use143"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="80"
+       y="48"
+       id="use145"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="80"
+       y="56"
+       id="use147"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="80"
+       y="64"
+       id="use149"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="80"
+       y="72"
+       id="use151"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="80"
+       y="80"
+       id="use153"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="80"
+       y="96"
+       id="use155"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="80"
+       y="112"
+       id="use157"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="80"
+       y="128"
+       id="use159"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="80"
+       y="144"
+       id="use161"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="80"
+       y="152"
+       id="use163"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="80"
+       y="160"
+       id="use165"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="80"
+       y="168"
+       id="use167"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="80"
+       y="176"
+       id="use169"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="80"
+       y="184"
+       id="use171"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="80"
+       y="192"
+       id="use173"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="88"
+       y="104"
+       id="use175"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="88"
+       y="120"
+       id="use177"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="96"
+       y="32"
+       id="use179"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="96"
+       y="48"
+       id="use181"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="96"
+       y="56"
+       id="use183"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="96"
+       y="64"
+       id="use185"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="96"
+       y="80"
+       id="use187"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="96"
+       y="96"
+       id="use189"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="96"
+       y="112"
+       id="use191"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="96"
+       y="136"
+       id="use193"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="96"
+       y="168"
+       id="use195"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="96"
+       y="176"
+       id="use197"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="96"
+       y="184"
+       id="use199"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="96"
+       y="192"
+       id="use201"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="104"
+       y="40"
+       id="use203"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="104"
+       y="56"
+       id="use205"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="104"
+       y="64"
+       id="use207"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="104"
+       y="88"
+       id="use209"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="104"
+       y="104"
+       id="use211"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="104"
+       y="112"
+       id="use213"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="104"
+       y="120"
+       id="use215"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="104"
+       y="136"
+       id="use217"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="104"
+       y="144"
+       id="use219"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="104"
+       y="168"
+       id="use221"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="104"
+       y="192"
+       id="use223"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="112"
+       y="40"
+       id="use225"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="112"
+       y="48"
+       id="use227"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="112"
+       y="64"
+       id="use229"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="112"
+       y="80"
+       id="use231"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="112"
+       y="88"
+       id="use233"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="112"
+       y="96"
+       id="use235"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="112"
+       y="120"
+       id="use237"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="112"
+       y="128"
+       id="use239"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="112"
+       y="144"
+       id="use241"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="112"
+       y="168"
+       id="use243"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="112"
+       y="176"
+       id="use245"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="120"
+       y="72"
+       id="use247"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="120"
+       y="96"
+       id="use249"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="120"
+       y="128"
+       id="use251"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="120"
+       y="136"
+       id="use253"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="120"
+       y="168"
+       id="use255"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="120"
+       y="176"
+       id="use257"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="120"
+       y="192"
+       id="use259"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="128"
+       y="48"
+       id="use261"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="128"
+       y="56"
+       id="use263"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="128"
+       y="64"
+       id="use265"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="128"
+       y="80"
+       id="use267"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="128"
+       y="88"
+       id="use269"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="128"
+       y="96"
+       id="use271"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="128"
+       y="120"
+       id="use273"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="128"
+       y="136"
+       id="use275"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="128"
+       y="168"
+       id="use277"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="128"
+       y="176"
+       id="use279"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="136"
+       y="96"
+       id="use281"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="136"
+       y="128"
+       id="use283"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="136"
+       y="144"
+       id="use285"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="136"
+       y="152"
+       id="use287"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="136"
+       y="184"
+       id="use289"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="136"
+       y="192"
+       id="use291"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="144"
+       y="32"
+       id="use293"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="144"
+       y="40"
+       id="use295"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="144"
+       y="48"
+       id="use297"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="144"
+       y="56"
+       id="use299"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="144"
+       y="64"
+       id="use301"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="144"
+       y="72"
+       id="use303"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="144"
+       y="80"
+       id="use305"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="144"
+       y="128"
+       id="use307"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="144"
+       y="144"
+       id="use309"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="144"
+       y="184"
+       id="use311"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="144"
+       y="192"
+       id="use313"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="152"
+       y="32"
+       id="use315"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="152"
+       y="80"
+       id="use317"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="152"
+       y="104"
+       id="use319"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="152"
+       y="112"
+       id="use321"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="152"
+       y="120"
+       id="use323"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="152"
+       y="160"
+       id="use325"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="152"
+       y="176"
+       id="use327"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="160"
+       y="32"
+       id="use329"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="160"
+       y="48"
+       id="use331"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="160"
+       y="56"
+       id="use333"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="160"
+       y="64"
+       id="use335"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="160"
+       y="80"
+       id="use337"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="160"
+       y="96"
+       id="use339"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="160"
+       y="104"
+       id="use341"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="160"
+       y="128"
+       id="use343"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="160"
+       y="136"
+       id="use345"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="160"
+       y="144"
+       id="use347"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="160"
+       y="152"
+       id="use349"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="160"
+       y="160"
+       id="use351"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="160"
+       y="184"
+       id="use353"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="168"
+       y="32"
+       id="use355"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="168"
+       y="48"
+       id="use357"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="168"
+       y="56"
+       id="use359"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="168"
+       y="64"
+       id="use361"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="168"
+       y="80"
+       id="use363"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="168"
+       y="96"
+       id="use365"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="168"
+       y="104"
+       id="use367"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="168"
+       y="112"
+       id="use369"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="168"
+       y="120"
+       id="use371"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="168"
+       y="128"
+       id="use373"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="168"
+       y="152"
+       id="use375"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="168"
+       y="184"
+       id="use377"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="168"
+       y="192"
+       id="use379"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="176"
+       y="32"
+       id="use381"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="176"
+       y="48"
+       id="use383"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="176"
+       y="56"
+       id="use385"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="176"
+       y="64"
+       id="use387"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="176"
+       y="80"
+       id="use389"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="176"
+       y="96"
+       id="use391"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="176"
+       y="104"
+       id="use393"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="176"
+       y="152"
+       id="use395"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="176"
+       y="160"
+       id="use397"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="176"
+       y="176"
+       id="use399"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="176"
+       y="192"
+       id="use401"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="184"
+       y="32"
+       id="use403"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="184"
+       y="80"
+       id="use405"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="184"
+       y="104"
+       id="use407"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="184"
+       y="112"
+       id="use409"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="184"
+       y="120"
+       id="use411"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="192"
+       y="32"
+       id="use413"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="192"
+       y="40"
+       id="use415"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="192"
+       y="48"
+       id="use417"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="192"
+       y="56"
+       id="use419"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="192"
+       y="64"
+       id="use421"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="192"
+       y="72"
+       id="use423"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="192"
+       y="80"
+       id="use425"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="192"
+       y="96"
+       id="use427"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="192"
+       y="104"
+       id="use429"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="192"
+       y="112"
+       id="use431"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="192"
+       y="128"
+       id="use433"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="192"
+       y="160"
+       id="use435"
+       width="100%"
+       height="100%" />
+    <use
+       xlink:href="#p"
+       x="192"
+       y="184"
+       id="use437"
+       width="100%"
+       height="100%" />
+  </g>
+  <g
+     id="g441"
+     transform="translate(10,10)" />
+  <text
+     xml:space="preserve"
+     style="font-weight:bold;font-size:85.33333333px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;fill:#000000;stroke-width:1"
+     x="14.680588"
+     y="54.495758"
+     id="text35825"><tspan
+       sodipodi:role="line"
+       id="tspan35823"></tspan></text>
+</svg>

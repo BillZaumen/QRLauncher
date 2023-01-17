@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=QRLauncher
+GenericName= QRLauncher
+Comment= Reads QR codes encoding URLs and opens the URLs using a browser
+Exec=qrl
+TryExec=qrl
+Terminal=false
+Type=Application
+Icon=/usr/share/icons/hicolor/scalable/apps/QRLauncher.svg
+Categories=Utility;
+StartupNotify=false

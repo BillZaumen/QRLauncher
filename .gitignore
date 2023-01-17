@@ -1,0 +1,6 @@
+*~
+BUILD/
+classes/
+qrlauncher.jar
+qrlauncher_*_all.deb
+inst/TBUILD

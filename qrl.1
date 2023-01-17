@@ -1,0 +1,101 @@
+.TH qrl "1" "Jan 2023" "qrl VERSION" "User Commands"
+.SH NAME
+qrl \- open browser windows from image files containing QR codes
+.SH SYNOPSIS
+.PP
+.B
+qrl
+[\fI\,OPTION\/\fR]... [\fI\,FILENAME\/\fR]...
+.br
+.B
+qrl
+[\fI\,OPTION\/\fR]...
+.B \-
+
+.SH DESCRIPTION
+.PP
+The program qrl opens a window that allows image files to be dragged
+or pasted into it.  If an image file recognized by Java is dragged
+into the drop location or appears on the command line, a QR code (if
+one exists) in the image will be read and decoded to produce a URL and
+the default browser will be "asked" to visit that URL.  A text window
+displays the file names and the URL's they encode, or a status
+indication if a URL cannot be decoded.
+.PP
+The
+.I FILENAME
+arguments will be resolved against the current working directory for
+qrl. If a file name starts with "http:", "https", of "ftp:",
+the file name is treated as an absolute URI.  If a file name starts
+with "file:", it will be treated as an absolute URI if the next
+character is "/" and a URI relative to the current working directory
+if the next character is not "/". If qrl is started via a
+desktop action, it will use a system-dependent default for the current
+working directory, typically the home directory of the user.
+One can paste file names that were represented as text.  In this case,
+there must be one file name per line.  As usual relative file names are
+resolved against the current working directory.
+.PP
+If the only non-option argument is
+.BR \- ,
+file names and URLs are read from standard input, with on name or URL
+per line.  For example,
+.IP
+.B cat files.txt | egrep '.png$' | qrl \-
+.PP
+will extract all the lines from the file
+.B files.txt
+that end with
+.B .png
+and arrange for
+.B qrl
+to  decode any QR codes and pass the URIs found to a browser.
+.PP
+If multiple images are provided, a browser may respond quickly to the
+first but with a noticeable delay for the others. Passing a URL to a
+browser is handled by the JDK and may not be available on all implementations.
+If not available, one can simply paste the decoded URI into a browser.
+
+.SH OPTIONS
+.PP
+The options are
+.TP
+.B \-\-
+End of options.  This is useful if a command line argument immediately
+following the options is the file name "-n" or "-p".
+.TP
+.B \-e
+Exit immediately after processing files and URLs provided on the
+command line instead of opening a window. Unless suppressed by a
+.B \-n
+option, URLs found by decoding QR codes will be opened by a browser
+(on systems that support this).
+.p
+.TP
+.BI \-d\  CWD
+Set the current working directory for QRL to
+.IR CWD .
+This directory will be used to resolve relative file names, but
+not URLs or URIs except for
+.B file
+URLs.
+.TP
+.B \-n
+Do not launch a web browser and instead just list the image files and
+the URL they encoded or some status and possibly error messages if a
+URL cannot be found.  If the
+.B \-e
+option is in effect with the
+.B \-n
+option, the
+.B \-p
+option is implied.
+.TP
+.B \-p
+Automatically print the file names and corresponding URLs or status to
+standard output.
+\"  LocalWords:  qrl fI fR URL's TP CWD http https URIs JDK URI XZing
+.SH AUTHOR
+Written by Bill Zaumen, using the XZing library for decoding QR
+codes.
+\"  LocalWords:  Zaumen
