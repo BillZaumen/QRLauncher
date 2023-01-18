@@ -1,6 +1,9 @@
 import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -9,19 +12,25 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
+import org.bzdev.io.AppendableWriter;
 import org.bzdev.swing.DarkmodeMonitor;
 import org.bzdev.swing.SimpleConsole;
 import org.bzdev.swing.ExtObjTransferHandler;
@@ -54,6 +63,7 @@ public class QRLauncher {
 	    if (output != tc && tc != null) {
 		tc.append("" + url);
 	    }
+	    String contents = null;
 	    InputStream is = url.openStream();
 	    BufferedImage bufferedImage = ImageIO.read(is);
 	    LuminanceSource source = new
@@ -62,12 +72,86 @@ public class QRLauncher {
 		new BinaryBitmap(new HybridBinarizer(source));
 	    String uri = (new MultiFormatReader().decode(bitmap))
 		.getText();
+	    URI u = null;
+	    try {
+		u = new URI(uri);
+	    } catch (URISyntaxException euri) {
+		// Assume what was decoded is not a URI,
+		// so create a text file containing the data.
+		String txt = ".txt";
+		String suffix = txt;
+		int ind1 = uri.indexOf("<");
+		if (ind1 != -1) {
+		    int ind2 = uri.indexOf(">");
+		    if (ind2 != -1 && ind1 < ind2) {
+			String tst = uri.stripLeading();
+			if (tst.charAt(0) == '<') {
+			    tst = uri.substring(ind1+1, ind2);
+			    if (ind1 == 0 &&
+				tst.matches("(!DOCTYPE\\s+|\\s*)"
+					    + "[hH][tT][mM][lL]"
+					    + "(\\s+|\\z)")) {
+				suffix =".html";
+			    }
+			}
+		    }
+		}
+		if (suffix == txt) {
+		    if (uri.startsWith("BEGIN:")) {
+			String tst = uri.substring(6);
+			int mode = -1;
+			if (tst.startsWith("VCARD")) {
+			    mode = 0;
+			    tst = uri.substring(6+5);
+			} else if (tst.startsWith("VCALENDAR")) {
+			    mode = 1;
+			    tst = uri.substring(6+9);
+			} else if (tst.startsWith("VEVENT")) {
+			    // The people implemnting this apparently
+			    // can't be bothered to use VCALENDAR, so
+			    // we'll add a wrapper.
+			    //
+			    // In case they forgot the ending CRLF ...
+			    char ch = uri.charAt(uri.length() - 1);
+			    if (ch != '\r' && ch != '\n') {
+				uri = uri + "\r\n";
+			    }
+			    tst = uri.substring(6 + 6);
+			    uri = "BEGIN:VCALENDAR\r\n" + uri
+				+ "END:VCALENDAR\r\n";
+			    mode = 1;
+			}
+			if (tst.length() > 2 && mode != -1 &&
+			    ((tst.charAt(0) == '\r' && tst.charAt(1) == '\n')
+			     || tst.charAt(0) == '\n')) {
+			    switch (mode) {
+			    case 0:
+				suffix = ".vcf";
+				break;
+			    case 1:
+				suffix = ".ics";
+				break;
+			    }
+			}
+		    }
+		}
+		// found the suffix so create a tmp file and use that
+		// to get the URI.
+		File tmp = File.createTempFile("qrl-url-contents", suffix);
+		tmp.deleteOnExit();
+		PrintWriter w = new PrintWriter(tmp, "UTF-8");
+		contents = uri;
+		w.print(uri);
+		w.close();
+		u = tmp.toURI();
+		uri = "[ " + u.toString() + " ]";
+	    }
+
 	    if (output != null) output.append(" \u2192 " + uri);
 	    if (output != tc && tc != null) {
 		tc.append(" \u2192 " + uri);
 	    }
 	    if (launch) {
-		URI u = new URI(uri);
 		if (Desktop.isDesktopSupported()) {
 		    Desktop desktop = Desktop.getDesktop();
 		    if (desktop.isSupported(Desktop.Action.BROWSE)) {
@@ -78,15 +162,22 @@ public class QRLauncher {
 				System.err.println(eio.getMessage());
 			    }
 			} else {
+			    URI uu = u;
 			    SwingUtilities.invokeLater(() -> {
 				    try {
-					desktop.browse(u);
+					desktop.browse(uu);
 				    } catch (IOException eio) {
 					System.err.println(eio.getMessage());
 				    }
 				});
 			}
 		    }
+		}
+	    } else if (contents != null) {
+		contents = " ...\n" + contents + "\n------------";
+		if (output != null) output.append(contents);
+		if (output != tc && tc != null) {
+		    tc.append(contents);
 		}
 	    }
 			
@@ -230,8 +321,37 @@ public class QRLauncher {
         frame.setVisible(true);
     }
 
+    static void qrEncode(String text, File cdir, String pathname,
+			 ErrorCorrectionLevel level,
+			 int width, int height)
+	throws Exception
+    {
+	Map<EncodeHintType,ErrorCorrectionLevel> map =  new HashMap<>();
+	map.put(EncodeHintType.ERROR_CORRECTION, level);
+	Charset cs = Charset.forName("UTF-8");
+	// they suggested new String(data.getBytes(charset), charset)
+	// which should be equal to data.
+	BitMatrix bm = new MultiFormatWriter().encode
+	    (text, BarcodeFormat.QR_CODE, width, height);
+	int ind = pathname.lastIndexOf('.');
+	if (ind != -1) {
+	    String suffix = pathname.substring(ind + 1);
+	    MatrixToImageWriter.writeToFile(bm, suffix,
+					    new File(cdir, pathname));
+	} else {
+	    throw new IOException("missing suffix");
+	}
+    }
+
+
     public static void main(String argv[]) throws Exception {
 	int index = 0;
+	int width = 100;
+	int height = 100;
+	String ipath = null;
+	String path = null;
+	boolean trim = false;
+	ErrorCorrectionLevel level = ErrorCorrectionLevel.L;
 	while (index < argv.length) {
 	    if (argv[index].equals("--")) {
 		index++;
@@ -251,12 +371,129 @@ public class QRLauncher {
 		}
 	    } else if (argv[index].equals("-e")) {
 		exitMode = true;
+	    } else if (argv[index].equals("-o")) {
+		index++;
+		if (index >= argv.length) {
+		    System.err.println(localeString("qrl") +": "
+				       + localeString("missingOutput"));
+		    System.exit(1);
+		}
+		path = argv[index];
+	    } else if (argv[index].equals("-i")) {
+		index++;
+		if (index >= argv.length) {
+		    System.err.println(localeString("qrl") +": "
+				       + localeString("missingInput"));
+		    System.exit(1);
+		}
+		ipath = argv[index];
+	    } else if (argv[index].equals("-w")) {
+		index++;
+		if (index >= argv.length) {
+		    System.err.println(localeString("qrl") +": "
+				       + localeString("missingWidth"));
+		    System.exit(1);
+		}
+		try {
+		    width = Integer.parseInt(argv[index]);
+		    if (width <= 0) {
+			System.err.println(localeString("qrl") +": "
+					   + localeString("missingWidth"));
+			System.exit(1);
+		    }
+		} catch (NumberFormatException nfe) {
+			System.err.println(localeString("qrl") +": "
+					   + localeString("missingWidth"));
+			System.exit(1);
+		}
+	    } else if (argv[index].equals("-h")) {
+		index++;
+		if (index >= argv.length) {
+		    System.err.println(localeString("qrl") +": "
+				       + localeString("missingHeight"));
+		    System.exit(1);
+		}
+		try {
+		    height = Integer.parseInt(argv[index]);
+		    if (height <= 0) {
+			System.err.println(localeString("qrl") +": "
+					   + localeString("missingHeight"));
+			System.exit(1);
+		    }
+		} catch (NumberFormatException nfe) {
+		    System.err.println(localeString("qrl") +": "
+				       + localeString("missingHeight"));
+		    System.exit(1);
+		}
+	    } else if (argv[index].equals("-L")) {
+		index++;
+		if (index >= argv.length) {
+		    System.err.println(localeString("qrl") +": "
+				       + localeString("missingLevel"));
+		    System.exit(1);
+		}
+		String arg = argv[index];
+		if (arg.length() != 1) {
+		    System.err.println(localeString("qrl") +": "
+				       + localeString("missingLevel"));
+		    System.exit(1);
+		}
+		char lch = arg.charAt(0);
+		switch(lch) {
+		case 'L':
+		    level = ErrorCorrectionLevel.L;
+		    break;
+		case 'M':
+		    level = ErrorCorrectionLevel.M;
+		    break;
+		case 'Q':
+		    level = ErrorCorrectionLevel.Q;
+		    break;
+		case 'H':
+		    level = ErrorCorrectionLevel.H;
+		    break;
+		default:
+		    System.err.println(localeString("qrl") +": "
+				       + localeString("missingLevel"));
+		    System.exit(1);
+		}
+	    } else if (argv[index].equals("-t")) {
+		trim = true;
+	    } else if (argv[index].startsWith("-")) {
+		    System.err.println(localeString("qrl") +" - "
+				       + localeString("unrecognizedOption")
+				       + ": " + argv[index]);
+		    System.exit(1);
 	    } else {
 		break;
 	    }
 	    index++;
 	}
 	File cdir = new File(cwd);
+	if (path != null) {
+	    InputStream is = System.in;
+	    try {
+		if (ipath != null) {
+		    is = new FileInputStream(new File(cdir, ipath));
+		}
+		InputStreamReader rd = new InputStreamReader(is, "UTF-8");
+		StringBuffer sb = new StringBuffer();
+		AppendableWriter w = new AppendableWriter(sb);
+		rd.transferTo(w);
+		w.flush();
+		String text = sb.toString();
+		if (trim) text = text.trim();
+		qrEncode(text, cdir, path, level, width, height);
+	    } catch (Exception ex) {
+		String msg = ex.getMessage();
+		if (msg == null || msg.trim().length() == 0) {
+		    msg = "" + ex.getClass().getName();
+		}
+		System.err.println(localeString("qrl") +": " + msg);
+		System.exit(1);
+	    }
+	    System.exit(0);
+	}
 
 	if (index  < argv.length) {
 	    String arg = argv[index];

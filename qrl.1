@@ -17,10 +17,22 @@ qrl
 The program qrl opens a window that allows image files to be dragged
 or pasted into it.  If an image file recognized by Java is dragged
 into the drop location or appears on the command line, a QR code (if
-one exists) in the image will be read and decoded to produce a URL and
-the default browser will be "asked" to visit that URL.  A text window
-displays the file names and the URL's they encode, or a status
-indication if a URL cannot be decoded.
+one exists) in the image will be read and decoded to produce a URL or
+text and the default browser will be "asked" to visit
+that URL or display that text.  A text window displays the file names and
+the URL's they encode, or a status indication if a URL cannot be
+decoded. When a QR Code encodes text that is not a URL, the text will
+be stored in a temporary file. For the format HTML, VCARD, and iCalendar,
+the temporary file will have the file-name extensions
+.BR html ,
+.BR vcf ,
+and
+.B ics
+respectively. Otherwise the extension will be
+.BR txt ,
+and a browser will open that file unless the
+.B \-n
+option is used.
 .PP
 The
 .I FILENAME
@@ -32,7 +44,7 @@ character is "/" and a URI relative to the current working directory
 if the next character is not "/". If qrl is started via a
 desktop action, it will use a system-dependent default for the current
 working directory, typically the home directory of the user.
-One can paste file names that were represented as text.  In this case,
+One can paste file names that are represented as text.  In this case,
 there must be one file name per line.  As usual relative file names are
 resolved against the current working directory.
 .PP
@@ -55,10 +67,34 @@ If multiple images are provided, a browser may respond quickly to the
 first but with a noticeable delay for the others. Passing a URL to a
 browser is handled by the JDK and may not be available on all implementations.
 If not available, one can simply paste the decoded URI into a browser.
-
+.PP
+With the
+.B \-e
+option, all temporary files will be removed when
+.B qrl
+exits. For some operating systems and browsers, and possibly JREs, this
+may result in a race condition in which a temporary file is removed before
+the browser opens it.  As a result, the use of the
+.B \-e
+option is discouraged unless the QR codes provided via the command line
+encode only URIs.
+.P
+Finally,
+.B qrl
+can create QR codes. In this case, the text being encoded is read from
+standard input and must be UTF-8 encoded. An output file, which must
+include a file-name extension indicating the image type is specified with
+the
+.B \-o
+option, which must be present to create a QR code.  The
+.BR \-w ,
+.BR \-h ,
+and
+.B \-L
+options are described below and are optional.
 .SH OPTIONS
 .PP
-The options are
+The options for reading QR codes are
 .TP
 .B \-\-
 End of options.  This is useful if a command line argument immediately
@@ -93,8 +129,37 @@ option is implied.
 .B \-p
 Automatically print the file names and corresponding URLs or status to
 standard output.
-\"  LocalWords:  qrl fI fR URL's TP CWD http https URIs JDK URI XZing
+.P
+The options for writing QR codes are
+.TP
+.BI \-i\  PATHNAME
+The path name for the input file. If missing, standard input is used.
+.TP
+.BI \-o\  PATHNAME
+The path name for the output file.
+.TP
+.BI \-w\  WIDTH
+The width of the QR CODE in pixels. The default is 100.
+.TP
+.BI \-h\  HEIGHT
+The height of the QR CODE in pixels. The default is 100.
+.TP
+.BI \-L\  LEVEL
+The error-correction level for the QR code. Legal values are
+.B L
+(allow for up to 7% damage),
+.B M
+(allow for up to 15% damage),
+.B Q
+(allow for up to 25% damage), and
+.B H
+(allow for up to 30% damage).
+.TP
+.B \-t
+The input will be trimmed by removing leading and trailing whitespace.
+This is useful when generating a QR code for a URI. 
 .SH AUTHOR
 Written by Bill Zaumen, using the XZing library for decoding QR
 codes.
+\"  LocalWords:  qrl fI fR URL's TP CWD http https URIs JDK URI XZing
 \"  LocalWords:  Zaumen

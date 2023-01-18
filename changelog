@@ -1,3 +1,13 @@
+qrlauncher (1.1) unstable; urgency=low
+
+  * Added options for generating QR codes. QR codes that encode text,
+    iCalendars, and VCARDs are now stored as temporary files and those
+    are passed to a browser to open them. Options for generating QR
+    codes include the image height and width, and the error-correction
+    level.
+
+ --  Bill Zaumen <bill.zaumen@gmail.com>  Sat, Jan 14 2023 14:50:00 -0800
+
 qrlauncher (1.0) unstable; urgency=low
 
   * Added a -d option to explicitly set the current working directory.
