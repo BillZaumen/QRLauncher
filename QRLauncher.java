@@ -13,10 +13,12 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,10 +33,16 @@ import javax.swing.JMenuItem;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 import org.bzdev.io.AppendableWriter;
+import org.bzdev.graphs.Colors;
 import org.bzdev.swing.DarkmodeMonitor;
 import org.bzdev.swing.SimpleConsole;
 import org.bzdev.swing.ExtObjTransferHandler;
 import org.bzdev.protocols.Handlers;
+import org.bzdev.gio.OutputStreamGraphics;
+
+import com.google.zxing.qrcode.encoder.Encoder;
+import com.google.zxing.qrcode.encoder.QRCode;
+import com.google.zxing.qrcode.encoder.ByteMatrix;
 
 public class QRLauncher {
 
@@ -55,6 +63,10 @@ public class QRLauncher {
 	+ "<H1><IMG SRC=\"sresource:dndTarget.png\"> &nbsp; &nbsp;"
 	+ localeString("instructions") + "</H1>"
 	+ "</BODY></HTML>";
+
+    // Default number taken from the zxing class QRCodeWriter
+    // so we'll be consistent.
+    private static final int QUIET_ZONE_SIZE = 4;
     
     static LinkedList<URI> uriList = new LinkedList<>();
     static void doAdd(URL url) throws IOException {
@@ -321,25 +333,69 @@ public class QRLauncher {
         frame.setVisible(true);
     }
 
-    static void qrEncode(String text, File cdir, String pathname,
+    static void drawRect(Graphics2D g2d, int x, int y, int w, int h) {
+	g2d.fillRect(x, y, w, h);
+        g2d.drawRect(x, y, w, h);
+    }
+
+
+    static void qrEncode(String text, File cdir,
+			 String iformat,
+			 String pathname,
 			 ErrorCorrectionLevel level,
-			 int width, int height)
+			 int width, int height,
+			 Color fgColor, Color bgColor)
 	throws Exception
     {
 	Map<EncodeHintType,ErrorCorrectionLevel> map =  new HashMap<>();
 	map.put(EncodeHintType.ERROR_CORRECTION, level);
-	Charset cs = Charset.forName("UTF-8");
-	// they suggested new String(data.getBytes(charset), charset)
-	// which should be equal to data.
-	BitMatrix bm = new MultiFormatWriter().encode
-	    (text, BarcodeFormat.QR_CODE, width, height);
+
 	int ind = pathname.lastIndexOf('.');
-	if (ind != -1) {
-	    String suffix = pathname.substring(ind + 1);
-	    MatrixToImageWriter.writeToFile(bm, suffix,
-					    new File(cdir, pathname));
+	if (iformat == null) {
+	    iformat = OutputStreamGraphics.getImageTypeForFile(pathname);
+	}
+	if (iformat != null) {
+	    QRCode code = Encoder.encode(text, level, map);
+	    File f = new File(pathname);
+	    OutputStream os = pathname.equals("-")? System.out:
+		new FileOutputStream(f.isAbsolute()? f:
+				     new File(cdir, pathname));
+	    OutputStreamGraphics osg = OutputStreamGraphics
+		.newInstance(os, width, height, iformat, true);
+	    Graphics2D g2d = osg.createGraphics();
+	    if (bgColor != null && bgColor.getAlpha() != 0) {
+		g2d.setColor(bgColor);
+		drawRect(g2d, 0, 0, width, height);
+	    }
+	    g2d.setColor(fgColor);
+	    g2d.setStroke(new BasicStroke(0.5F));
+	    // Set up by copying from QRCodeWriter in zxing
+	    ByteMatrix input = code.getMatrix();
+	    int inputWidth = input.getWidth();
+	    int inputHeight = input.getHeight();
+	    int qrWidth = inputWidth + (QUIET_ZONE_SIZE * 2);
+	    int qrHeight = inputHeight + (QUIET_ZONE_SIZE * 2);
+	    int outputWidth = Math.max(width, qrWidth);
+	    int outputHeight = Math.max(height, qrHeight);
+	    int multiple = Math.min(outputWidth / qrWidth,
+				    outputHeight / qrHeight);
+	    int leftPadding = (outputWidth - (inputWidth * multiple)) / 2;
+	    int topPadding = (outputHeight - (inputHeight * multiple)) / 2;
+
+	    for (int inputY = 0, outputY = topPadding;
+		 inputY < inputHeight; inputY++, outputY += multiple) {
+		// Write the contents of this row of the barcode
+		for (int inputX = 0, outputX = leftPadding;
+		     inputX < inputWidth; inputX++, outputX += multiple) {
+		    if (input.get(inputX, inputY) == 1) {
+			drawRect(g2d, outputX, outputY, multiple, multiple);
+		    }
+		}
+	    }
+	    osg.flush();
+	    osg.imageComplete();
 	} else {
-	    throw new IOException("missing suffix");
+	    throw new IOException(localeString("missingSuffix"));
 	}
     }
 
@@ -351,7 +407,10 @@ public class QRLauncher {
 	String ipath = null;
 	String path = null;
 	boolean trim = false;
+	String iformat = null;
 	ErrorCorrectionLevel level = ErrorCorrectionLevel.L;
+	Color fgColor = Color.BLACK;
+	Color bgColor = Color.WHITE;
 	while (index < argv.length) {
 	    if (argv[index].equals("--")) {
 		index++;
@@ -387,6 +446,8 @@ public class QRLauncher {
 		    System.exit(1);
 		}
 		ipath = argv[index];
+		// with no -i option, STDIN is assumed.
+		if (ipath.equals("-")) ipath = null;
 	    } else if (argv[index].equals("-w")) {
 		index++;
 		if (index >= argv.length) {
@@ -457,8 +518,60 @@ public class QRLauncher {
 				       + localeString("missingLevel"));
 		    System.exit(1);
 		}
+	    } else if (argv[index].equals("-f")) {
+		index++;
+		if (index >= argv.length) {
+		    System.err.println(localeString("qrl") +": "
+				       + localeString("missingFormat"));
+		    System.exit(1);
+		}
+		iformat = argv[index];
+	    } else if (argv[index].equals("-B")) {
+		index++;
+		if (index >= argv.length) {
+		    System.err.println(localeString("qrl") +": "
+				       + localeString("missingBGColor"));
+		    System.exit(1);
+		}
+		try {
+		    bgColor = Colors.getColorByCSS(argv[index]);
+		} catch (IllegalArgumentException iae) {
+		    System.err.println(localeString("qrl") +": "
+				       + localeString("illformedBGColor"));
+		    System.exit(1);
+		}
+	    } else if (argv[index].equals("-F")) {
+		index++;
+		if (index >= argv.length) {
+		    System.err.println(localeString("qrl") +": "
+				       + localeString("missingFGColor"));
+		    System.exit(1);
+		}
+		try {
+		    fgColor = Colors.getColorByCSS(argv[index]);
+		} catch (IllegalArgumentException iae) {
+		    System.err.println(localeString("qrl") +": "
+				       + localeString("illformedFGColor"));
+		    System.exit(1);
+		}
 	    } else if (argv[index].equals("-t")) {
 		trim = true;
+	    } else if (argv[index].equals("--colors")) {
+		System.out.println("transparent");
+		for (String color: Colors.namedCSSColors()) {
+		    System.out.println(color);
+		}
+		System.exit(0);
+	    } else if (argv[index].equals("--formats")) {
+		for (String fmt: OutputStreamGraphics.getImageTypes()) {
+		    System.out.println(fmt);
+		}
+		System.exit(0);
+	    } else if (argv[index].equals("--format-aliases")) {
+		for (String fmt: OutputStreamGraphics.getAllImageTypes()) {
+		    System.out.println(fmt);
+		}
+		System.exit(0);
 	    } else if (argv[index].startsWith("-")) {
 		    System.err.println(localeString("qrl") +" - "
 				       + localeString("unrecognizedOption")
@@ -474,7 +587,9 @@ public class QRLauncher {
 	    InputStream is = System.in;
 	    try {
 		if (ipath != null) {
-		    is = new FileInputStream(new File(cdir, ipath));
+		    File f = new File(ipath);
+		    is = new FileInputStream(f.isAbsolute()? f:
+					     new File(cdir, ipath));
 		}
 		InputStreamReader rd = new InputStreamReader(is, "UTF-8");
 		StringBuffer sb = new StringBuffer();
@@ -483,7 +598,8 @@ public class QRLauncher {
 		w.flush();
 		String text = sb.toString();
 		if (trim) text = text.trim();
-		qrEncode(text, cdir, path, level, width, height);
+		qrEncode(text, cdir, iformat, path, level, width, height,
+			 fgColor, bgColor);
 	    } catch (Exception ex) {
 		String msg = ex.getMessage();
 		if (msg == null || msg.trim().length() == 0) {
@@ -539,7 +655,8 @@ public class QRLauncher {
 		    System.err.println(localeString("badURI"));
 		}
 	    } else {
-		uriList.add((new File (cwd, arg)).toURI());
+		File f = new File(arg);
+		uriList.add((f.isAbsolute()? f: new File (cwd, arg)).toURI());
 	    }
 	    index++;
 	}

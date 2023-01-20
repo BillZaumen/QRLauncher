@@ -1,3 +1,12 @@
+qrlauncher (1.2) unstable; urgency=low
+
+  * Added options for specifying a foreground and background color, an
+    explicit choice of image formats, and listing of named colors and
+    formats. The image formats now include svg and svgz when the
+    libosgbatik package is installed.
+
+ --  Bill Zaumen <bill.zaumen@gmail.com>  Sat, Jan 14 2023 14:50:00 -0800
+
 qrlauncher (1.1) unstable; urgency=low
 
   * Added options for generating QR codes. QR codes that encode text,

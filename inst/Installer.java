@@ -768,6 +768,8 @@ public class Installer {
 	    "qrlauncher.jar",
 	    "libbzdev-base.jar",
 	    "libbzdev-desktop.jar",
+	    "libbzdev-graphics.jar",
+	    "libosgbatik.jar",
 	    "core.jar",
 	    "javase.jar",
 	    "share.zip",

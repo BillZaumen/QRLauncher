@@ -1,3 +1,4 @@
 Main-Class: QRLauncher
 Class-Path: libbzdev-base.jar libbzdev-desktop.jar
+  libbzdev-graphics.jar libosgbatik.jar
   core.jar javase.jar

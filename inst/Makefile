@@ -9,6 +9,8 @@ all: qrlauncher.jar
 	cp qrlauncher.jar TBUILD/qrlauncher.jar
 	cp /usr/share/java/libbzdev-base.jar TBUILD/libbzdev-base.jar
 	cp /usr/share/java/libbzdev-desktop.jar TBUILD/libbzdev-desktop.jar
+	cp /usr/share/java/libbzdev-graphics.jar TBUILD/libbzdev-graphics.jar
+	cp /usr/share/java/libosgbatik.jar TBUILD/libosgbatik.jar
 	cp /usr/share/java/core.jar TBUILD/core.jar
 	cp /usr/share/java/javase.jar TBUILD/javase.jar
 	cp ../qrl.1 TBUILD/qrl.1

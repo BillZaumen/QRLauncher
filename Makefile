@@ -10,7 +10,7 @@
 # packages libzxing-core-java and libzxing-javase-java.
 
 
-VERSION = 1.1
+VERSION = 1.2
 
 DATE = $(shell date -R)
 
@@ -51,7 +51,9 @@ ICON_WIDTHS2x = 16 24 32 48 64 128 256
 
 DEB = qrlauncher_$(VERSION)_all.deb
 
-all: qrlauncher.jar $(DEB) qrlauncher-install-$(VERSION).jar
+jarfile: qrlauncher.jar
+
+release: qrlauncher.jar $(DEB) qrlauncher-install-$(VERSION).jar
 
 qrlauncher.jar: QRLauncher.java QRLauncher.svg dndTarget.png
 	mkdir -p classes
