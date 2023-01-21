@@ -9,7 +9,8 @@ QRLauncher can be started by a desktop action or by using the command
 text files or standard input.  When a QR code is created one can specify
 the width and height of the image, the image format, the foreground and
 background colors (including an alpha channel), and the error-correction
-level.
+level. In addition to the image formats that Java supports, `qrl` provides
+PostScript and optionally SVG.
 
 Installation instructions are available
 [here](https://billzaumen.github.io/bzdev/).
