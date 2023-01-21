@@ -17,6 +17,29 @@ When an installer is used, libraries to support SVG are automatically
 included.  With a package manager, the package libosgbatik-java is needed
 to enable SVG support.
 
+The short version for installation on Debian systems is to run the
+following commands:
+
+```
+curl https://billzaumen.github.io/bzdev/setup.sh | sh
+sudo apt-get update
+sudo apt install qrlauncher
+sudo apt isntall libosgbatik-java
+```
+
+The file setup.sh contains commands for configuring apt to use the
+repository that contains the necessary Debian packages.
+
+For non-linux systems, download the QRLauncher installer listed on
+the [installer page](https://billzaumen.github.io/bzdev/installers.html).
+and run
+
+```
+sudo java -jar INSTALLER
+```
+
+where INSTALLER is the file that was downloaded.  Java, of course, must
+be installed first.
 
 ## Screenshots
 
