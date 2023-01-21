@@ -22,11 +22,11 @@ to enable SVG support.
 
 Desktop file:
 
-![Desktop Icon](https//billzaumen.github.io/QRLauncher/desktop.png)
+![Desktop Icon](https://billzaumen.github.io/QRLauncher/desktop.png)
 
 Application window:
 
-![QRLauncher window](https//billzaumen.github.io/QRLauncher/screenshot.png)
+![QRLauncher window](https://billzaumen.github.io/QRLauncher/screenshot.png)
 
 Files can be dragged into the window or copied and pasted into the
 window. Multiple selections are allowed.  If text containing file names
