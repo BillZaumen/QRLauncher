@@ -762,13 +762,15 @@ public class Installer {
 	};
 	
 	String htmls[] = {
-	    "qrl.html"
+	    "qrl.html",
+	    "qrl-files.html"
 	};
 	String libraries[] = {
 	    "qrlauncher.jar",
 	    "libbzdev-base.jar",
 	    "libbzdev-desktop.jar",
 	    "libbzdev-graphics.jar",
+	    "libbzdev-math.jar",
 	    "libosgbatik.jar",
 	    "core.jar",
 	    "javase.jar",
@@ -788,12 +790,14 @@ public class Installer {
 	};
 
 	String man5s[] = {
+	    "qrl.5"
 	};
 
 	String man1sGzip[] = {
 	    "qrl.1.gz",
 	};
 	String man5sGzip[] = {
+	    "qrl.5.gz"
 	};
 
 	String docfiles[] = {
@@ -1192,8 +1196,7 @@ public class Installer {
 		if (qrldirString != null) {
 		    file = file.replace("QRLDIR", qrldirString);
 		} else {
-		    file = file.replace("QRLDIR", "\"" + qrldir.toString()
-					+ "\"");
+		    file = file.replace("QRLDIR", qrldir.toString());
 		}
 		file = file.replace("/", System.getProperty("file.separator"));
 		// Windows/DOS line termination now handled in createFile.

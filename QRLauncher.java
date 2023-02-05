@@ -14,31 +14,39 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Properties;
+import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import java.util.LinkedList;
-import java.util.ResourceBundle;
-import org.bzdev.io.AppendableWriter;
-import org.bzdev.graphs.Colors;
-import org.bzdev.swing.DarkmodeMonitor;
-import org.bzdev.swing.SimpleConsole;
-import org.bzdev.swing.ExtObjTransferHandler;
-import org.bzdev.protocols.Handlers;
 import org.bzdev.gio.OutputStreamGraphics;
+import org.bzdev.graphs.Colors;
+import org.bzdev.io.AppendableWriter;
+import org.bzdev.protocols.Handlers;
+import org.bzdev.swing.CSSCellEditor;
+import org.bzdev.swing.ConfigPropertyEditor;
+import org.bzdev.swing.DarkmodeMonitor;
+import org.bzdev.swing.ExtObjTransferHandler;
+import org.bzdev.swing.FileNameCellEditor;
+import org.bzdev.swing.SimpleConsole;
+import org.bzdev.swing.table.CSSTableCellRenderer;
+
 
 import com.google.zxing.qrcode.encoder.Encoder;
 import com.google.zxing.qrcode.encoder.QRCode;
@@ -248,7 +256,7 @@ public class QRLauncher {
 	| InputEvent.ALT_DOWN_MASK | InputEvent.ALT_GRAPH_DOWN_MASK;
 
     private static String cwd = System.getProperty("user.dir");
-
+    private static String origCWD = cwd;
 
     static void startGUI() {
 	tc = new SimpleConsole();
@@ -399,11 +407,136 @@ public class QRLauncher {
 	}
     }
 
+    static class ConfigEditor extends ConfigPropertyEditor {
+	public ConfigEditor() {
+	    super();
+	    addIcon(QRLauncher.class, "QRLConf16.png");
+	    addIcon(QRLauncher.class, "QRLConf24.png");
+	    addIcon(QRLauncher.class, "QRLConf32.png");
+	    addIcon(QRLauncher.class, "QRLConf48.png");
+	    addIcon(QRLauncher.class, "QRLConf64.png");
+	    addIcon(QRLauncher.class, "QRLConf96.png");
+	    addIcon(QRLauncher.class, "QRLConf128.png");
+	    addIcon(QRLauncher.class, "QRLConf256.png");
+	    addAltReservedKeys("Input", "uri", "file");
+	    addReservedKeys("Width", "Height", "Foreground.color",
+			    "Background.color", "ErrorCorrection.level");
+	    addReservedKeys("QRCode.imageFormat", "QRCode.file");
+
+	    setDefaultProperty("ErrorCorrection.level", "L");
+	    setDefaultProperty("QRCode.imageFormat", "png");
+	    setupCompleted();
+	    freezeRows();
+	    addRE("color",
+		  new CSSTableCellRenderer(false),
+		  new CSSCellEditor());
+	    addRE("file", null, new FileNameCellEditor("QR Code File", true));
+
+	    JComboBox<String>comboBox = new JComboBox<>(new String[] {
+		    "L", "M", "Q", "H"
+	    });
+	    addRE("level", null, new DefaultCellEditor(comboBox));
+
+	    String[] ifmts = OutputStreamGraphics.getAllImageTypes();
+	    Arrays.sort(ifmts);
+	    
+	    JComboBox<String> icomboBox = new JComboBox<>(ifmts);
+	    addRE("imageFormat", null, new DefaultCellEditor(icomboBox));
+	}
+
+	public String errorTitle() {return "QRLauncher Error";}
+	public String configTitle() {return "QRLauncher QRCode Configuration";}
+	public String mediaType() {
+	    return "application/vnd.bzdev.qrlauncher-config";
+	}
+	public String extensionFilterTitle() {return "QRLauncher Files";}
+	public String extension() {return "qrl";}
+    }
+
+    static ConfigEditor editor;
+    static void config(File cdir, File props)
+	throws IOException, InterruptedException, InvocationTargetException
+    {
+	if (cdir == null)  {
+	    cdir = new File (cwd);
+	} else {
+	    System.setProperty("user.dir", cdir.getCanonicalPath());
+	}
+	SwingUtilities.invokeAndWait(() -> {
+		DarkmodeMonitor.setSystemPLAF();
+		DarkmodeMonitor.init();
+		editor = new ConfigEditor();
+	    });
+	if (props != null) {
+	    editor.loadFile(props);
+	}
+	editor.edit(null, ConfigPropertyEditor.Mode.MODAL, null,
+		    ConfigPropertyEditor.CloseMode.BOTH);
+	Properties results = editor.getDecodedProperties();
+	String width = results.getProperty("Width", "100");
+	String height = results.getProperty("Height", "100");
+	String fgColor = results.getProperty("Foreground.color", "black");
+	String bgColor = results.getProperty("Background.color", "white");
+	String level = results.getProperty("ErrorCorrection.level", "L");
+	String imageFormat = results.getProperty("QRCode.imageFormat",
+						 "png");
+	String output = results.getProperty("QRCode.file");
+	if (output == null) {
+	    output = JOptionPane.showInputDialog(null,
+						 localeString("outputRequest"),
+						 localeString("title"),
+						 JOptionPane.QUESTION_MESSAGE);
+	    if (output == null || output.trim().length() == 0) System.exit(1);
+	}
+	String[] suffixes = OutputStreamGraphics
+	    .getSuffixesForImageType(imageFormat);
+	boolean addSuffix = true;
+	for (String ext: suffixes) {
+	    if (output.endsWith("." + ext)) {
+		addSuffix = false;
+		break;
+	    }
+	}
+	if (addSuffix && suffixes.length > 0) {
+	    output = output + "." + suffixes[0];
+	}
+
+	String uri = results.getProperty("input.uri");
+	String ifile = results.getProperty("input.file");
+	if (uri == null && ifile == null) {
+	    uri = JOptionPane.showInputDialog(null,
+					      localeString("uriRequest"),
+					      localeString("title"),
+					      JOptionPane.QUESTION_MESSAGE);
+	    if (uri == null || uri.trim().length() == 0) System.exit(1);
+	    
+	}
+	try {
+	    ProcessBuilder pb = new ProcessBuilder
+		(System.getProperty("qrl.cmd"),
+		 ((uri == null)? "-i": "-u"),
+		 ((uri == null)? ifile: uri),
+		 "-w", width,
+		 "-h", height,
+		 "-F", fgColor,
+		 "-B", bgColor,
+		 "-L", level,
+		 "-o", output);
+	    pb.inheritIO();
+	    Process p = pb.start();
+	    System.exit(p.waitFor());
+	} catch (Exception e) {
+	    System.err.println("qrl: " + e.getMessage());
+	    System.exit(1);
+	}
+    }
+
 
     public static void main(String argv[]) throws Exception {
 	int index = 0;
 	int width = 100;
 	int height = 100;
+	String uri = null;
 	String ipath = null;
 	String path = null;
 	boolean trim = false;
@@ -438,6 +571,22 @@ public class QRLauncher {
 		    System.exit(1);
 		}
 		path = argv[index];
+	    } else if (argv[index].equals("-u")) {
+		index++;
+		if (index >= argv.length) {
+		    System.err.println(localeString("qrl") +": "
+				       + localeString("missingInput"));
+		    System.exit(1);
+		}
+		uri = argv[index];
+		try {
+		    new URI(uri);
+		} catch (URISyntaxException e) {
+		    System.err.println(localeString("qrl") + ":"
+				       + localeString("badURI" + " - ")
+				       + uri);
+		    System.exit(1);
+		}
 	    } else if (argv[index].equals("-i")) {
 		index++;
 		if (index >= argv.length) {
@@ -572,6 +721,8 @@ public class QRLauncher {
 		    System.out.println(fmt);
 		}
 		System.exit(0);
+	    } else if (argv[index].equals("-g")) {
+		    config(new File(cwd), null);
 	    } else if (argv[index].startsWith("-")) {
 		    System.err.println(localeString("qrl") +" - "
 				       + localeString("unrecognizedOption")
@@ -582,22 +733,31 @@ public class QRLauncher {
 	    }
 	    index++;
 	}
+	if (ipath != null && uri != null) {
+	    System.err.println(localeString("qrl") + ": "
+			       + localeString("uriAndPath"));
+	}
 	File cdir = new File(cwd);
 	if (path != null) {
-	    InputStream is = System.in;
 	    try {
-		if (ipath != null) {
-		    File f = new File(ipath);
-		    is = new FileInputStream(f.isAbsolute()? f:
-					     new File(cdir, ipath));
+		String text;
+		if (uri != null) {
+		    text = uri;
+		} else {
+		    InputStream is = System.in;
+		    if (ipath != null) {
+			File f = new File(ipath);
+			is = new FileInputStream(f.isAbsolute()? f:
+						 new File(cdir, ipath));
+		    }
+		    InputStreamReader rd = new InputStreamReader(is, "UTF-8");
+		    StringBuffer sb = new StringBuffer();
+		    AppendableWriter w = new AppendableWriter(sb);
+		    rd.transferTo(w);
+		    w.flush();
+		    text = sb.toString();
+		    if (trim) text = text.trim();
 		}
-		InputStreamReader rd = new InputStreamReader(is, "UTF-8");
-		StringBuffer sb = new StringBuffer();
-		AppendableWriter w = new AppendableWriter(sb);
-		rd.transferTo(w);
-		w.flush();
-		String text = sb.toString();
-		if (trim) text = text.trim();
 		qrEncode(text, cdir, iformat, path, level, width, height,
 			 fgColor, bgColor);
 	    } catch (Exception ex) {
@@ -618,7 +778,7 @@ public class QRLauncher {
 		LineNumberReader reader =
 		    new LineNumberReader(new InputStreamReader(System.in,
 							       "UTF-8"));
-		String uri;
+		// String uri;
 		ArrayList<String> list = new ArrayList<>();
 		int count = 0;
 		while ((uri = reader.readLine()) != null) {
@@ -631,6 +791,9 @@ public class QRLauncher {
 		argv = new String[count];
 		argv = list.toArray(argv);
 		index = 0;
+	    } else if (arg.endsWith(".qrl")) {
+		config(new File(cwd), new File(arg));
+		System.exit(0);
 	    }
 	}
 
@@ -662,8 +825,8 @@ public class QRLauncher {
 	}
 	if (exitMode) {
 	    if (launch == false) output = System.out;
-	    for (URI uri: uriList) {
-		doAdd(uri.toURL());
+	    for (URI u: uriList) {
+		doAdd(u.toURL());
 	    }
 	    System.exit(0);
 	}

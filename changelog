@@ -1,3 +1,10 @@
+qrlauncher (1.3) unstable; urgency=low
+
+  * Added a GUI-based configuration panel and an option to provide a URL
+    on the command line. Also added media-type support for a configuration
+    file, with icons for that file type.
+
+ --  Bill Zaumen <bill.zaumen@gmail.com>  Sat, Jan 14 2023 14:50:00 -0800
 qrlauncher (1.2) unstable; urgency=low
 
   * Added options for specifying a foreground and background color, an

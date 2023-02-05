@@ -1,0 +1,7 @@
+The program QRLauncher reads QR codes and then opens
+contents, typically using a browser.  It can also
+generate QR codes.
+
+There is a separate package for icons foor Pop!_OS
+systems: ones in the 'hicolor' directory are not
+seen if there is a match in the Pop directory.

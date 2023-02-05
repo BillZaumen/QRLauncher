@@ -141,13 +141,31 @@ standard output.
 .P
 The options for writing QR codes are
 .TP
+.BI \-u\  URI
+The URI to use as an input.
+The
+.B \-u
+and the
+.B \-i
+options are mutually exclusive.
+.TP
 .BI \-i\  PATHNAME
-The path name for the input file. If missing, standard input is used.
+The path name for the input file. If missing, or if
+.I PATHNAME
+is
+.BR \- ,
+standard input is used. The
+.B \-u
+and the
+.B \-i
+options are mutually exclusive.
 .TP
 .BI \-o\  PATHNAME
 The path name for the output file. IF the path is "-", the image is
 written to standard output.  This option must be present to create a
-QR code.
+QR code unless the only non-option argument is a single file ending
+in the file-name extension
+.BR  qrl .
 .TP
 .BI \-w\  WIDTH
 The width of the QR CODE in pixels. The default is 100.

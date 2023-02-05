@@ -27,58 +27,14 @@
      fit-margin-right="10"
      fit-margin-bottom="10"
      inkscape:zoom="3.6163793"
-     inkscape:cx="128.44338"
-     inkscape:cy="140.74851"
+     inkscape:cx="128.44339"
+     inkscape:cy="120.00954"
      inkscape:window-width="1920"
      inkscape:window-height="1011"
      inkscape:window-x="0"
      inkscape:window-y="32"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg443" />
-  <text
-     xml:space="preserve"
-     style="font-weight:bold;font-size:96px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;fill:#00ffff;stroke-width:1"
-     x="174.89561"
-     y="247.40858"
-     id="text105178"><tspan
-       sodipodi:role="line"
-       id="tspan105176"
-       x="174.89561"
-       y="247.40858">R</tspan></text>
-  <text
-     xml:space="preserve"
-     style="font-weight:bold;font-size:96px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;fill:#00ffff;stroke-width:1"
-     x="-0.86868286"
-     y="81.623764"
-     id="text46075"><tspan
-       sodipodi:role="line"
-       id="tspan46073"
-       x="-0.86868286"
-       y="81.623764"
-       style="font-size:96px;fill:#00ffff">Q</tspan></text>
-  <text
-     xml:space="preserve"
-     style="font-weight:bold;font-size:96px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;fill:#00ffff;stroke-width:1"
-     x="96.292137"
-     y="176.22623"
-     id="text85959"><tspan
-       sodipodi:role="line"
-       id="tspan85957"
-       x="96.292137"
-       y="176.22623">L</tspan><tspan
-       sodipodi:role="line"
-       x="96.292137"
-       y="296.22623"
-       id="tspan93723" /></text>
-  <defs
-     id="defs5">
-    <rect
-       id="p"
-       width="8"
-       height="8"
-       x="0"
-       y="0" />
-  </defs>
   <g
      fill="#000000"
      id="g439"
@@ -1596,6 +1552,50 @@
        width="100%"
        height="100%" />
   </g>
+  <text
+     xml:space="preserve"
+     style="font-weight:bold;font-size:96px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;fill:#00ffff;stroke-width:1"
+     x="178.29214"
+     y="234.22623"
+     id="text85959"><tspan
+       sodipodi:role="line"
+       id="tspan85957"
+       x="178.29214"
+       y="234.22623">L</tspan><tspan
+       sodipodi:role="line"
+       x="178.29214"
+       y="354.22623"
+       id="tspan93723" /></text>
+  <text
+     xml:space="preserve"
+     style="font-weight:bold;font-size:96px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;fill:#00ffff;stroke-width:1"
+     x="88.895607"
+     y="169.40858"
+     id="text105178"><tspan
+       sodipodi:role="line"
+       id="tspan105176"
+       x="88.895607"
+       y="169.40858">R</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-weight:bold;font-size:96px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';text-decoration:none;text-decoration-line:none;text-decoration-color:#000000;letter-spacing:0px;word-spacing:0px;fill:#00ffff;stroke-width:1"
+     x="-0.86868286"
+     y="81.623764"
+     id="text46075"><tspan
+       sodipodi:role="line"
+       id="tspan46073"
+       x="-0.86868286"
+       y="81.623764"
+       style="font-size:96px;fill:#00ffff">Q</tspan></text>
+  <defs
+     id="defs5">
+    <rect
+       id="p"
+       width="8"
+       height="8"
+       x="0"
+       y="0" />
+  </defs>
   <g
      id="g441"
      transform="translate(10,10)" />
@@ -1606,5 +1606,5 @@
      y="54.495758"
      id="text35825"><tspan
        sodipodi:role="line"
-       id="tspan35823"></tspan></text>
+       id="tspan35823" /></text>
 </svg>

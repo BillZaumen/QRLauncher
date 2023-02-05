@@ -2,6 +2,7 @@
 set -e
 if [ "$1" != "upgrade" ]
 then
+	update-mime-database /usr/share/mime
 	gtk-update-icon-cache --force /usr/share/icons/hicolor
 fi
 exit 0
