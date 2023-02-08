@@ -56,3 +56,7 @@ Files can be dragged into the window or copied and pasted into the
 window. Multiple selections are allowed.  If text containing file names
 or URUs are dragged into the window, each URI or file name must be on its
 own line.
+
+QRCode-generator window:
+
+![QR code generator](https://billzaumen.github.io/QRLauncher/screenshot2.png)

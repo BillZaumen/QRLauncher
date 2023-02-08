@@ -35,6 +35,7 @@ import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.filechooser.FileFilter;
 import org.bzdev.gio.OutputStreamGraphics;
 import org.bzdev.graphs.Colors;
 import org.bzdev.io.AppendableWriter;
@@ -408,6 +409,30 @@ public class QRLauncher {
     }
 
     static class ConfigEditor extends ConfigPropertyEditor {
+	private String ifmt = "png";
+	private String[] currentImageSuffixes =
+	    OutputStreamGraphics.getSuffixesForImageType(ifmt);
+
+	private FileFilter getFileFilter() {
+	    return  new FileFilter() {
+		    public boolean accept (File f) {
+			String path = f.getPath();
+			int ind = path.lastIndexOf('.');
+			if (ind == -1) return false;
+			path = path.substring(ind+1);
+			for (String suffix: currentImageSuffixes) {
+			    if (path.equals(suffix)) return true;
+			}
+			return false;
+		    }
+		    public String getDescription() {
+			return String.format(localeString("imageFilesFor"),
+					     ifmt);
+		    }
+		};
+	}
+	private FileFilter filter = getFileFilter();
+
 	public ConfigEditor() {
 	    super();
 	    addIcon(QRLauncher.class, "QRLConf16.png");
@@ -426,6 +451,7 @@ public class QRLauncher {
 	    setDefaultProperty("ErrorCorrection.level", "L");
 	    setDefaultProperty("QRCode.imageFormat", "png");
 	    setupCompleted();
+	    setInitialExtraRows(0);
 	    freezeRows();
 	    addRE("color",
 		  new CSSTableCellRenderer(false),
@@ -442,6 +468,49 @@ public class QRLauncher {
 	    
 	    JComboBox<String> icomboBox = new JComboBox<>(ifmts);
 	    addRE("imageFormat", null, new DefaultCellEditor(icomboBox));
+
+	    FileNameCellEditor outputFileEditor =
+		new FileNameCellEditor("QR Code File", true) {
+		    public Object getCellEditorValue() {
+			Object val = super.getCellEditorValue();
+			if (val == null) return null;
+			if (val instanceof String) {
+			    String value = (String)val;
+			    int ind = value.lastIndexOf('.');
+			    boolean addSuffix = false;
+			    if (ind >= 0) {
+				String s = value.substring(ind+1);
+				for (String ext: currentImageSuffixes) {
+				    if (s.equals(ext)) return val;
+				}
+			    }
+			    String suffix = OutputStreamGraphics
+				.getSuffixForImageType(ifmt);
+			    return value + "." + suffix;
+			}
+			return val;
+		    }
+		};
+	    outputFileEditor.addChoosableFileFilter(filter);
+	    outputFileEditor.setFileFilter(filter);
+
+	    addRE("QRCode.file", null, outputFileEditor);
+	    changedPropertyClears("QRCode.imageFormat", "QRCode.file");
+
+	    monitorProperty("QRCode.imageFormat");
+	    addConfigPropertyListener((e) -> {
+		    String key = e.getProperty();
+		    String fmt = e.getValue();
+		    if (key.equals("QRCode.imageFormat")) {
+			ifmt = fmt;
+			currentImageSuffixes = OutputStreamGraphics
+			    .getSuffixesForImageType(fmt);
+			outputFileEditor.removeChoosableFileFilter(filter);
+			filter = getFileFilter();
+			outputFileEditor.addChoosableFileFilter(filter);
+			outputFileEditor.setFileFilter(filter);
+		    }
+		});
 	}
 
 	public String errorTitle() {return "QRLauncher Error";}
@@ -498,11 +567,12 @@ public class QRLauncher {
 	    }
 	}
 	if (addSuffix && suffixes.length > 0) {
-	    output = output + "." + suffixes[0];
+	    output = output + "."
+		+ OutputStreamGraphics.getSuffixForImageType(imageFormat);
 	}
 
-	String uri = results.getProperty("input.uri");
-	String ifile = results.getProperty("input.file");
+	String uri = results.getProperty("Input.uri");
+	String ifile = results.getProperty("Input.file");
 	if (uri == null && ifile == null) {
 	    uri = JOptionPane.showInputDialog(null,
 					      localeString("uriRequest"),

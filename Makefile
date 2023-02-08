@@ -45,14 +45,13 @@ APPDIR = $(DESTDIR)$(SYS_APPDIR)
 ICON_DIR = $(DESTDIR)$(SYS_ICON_DIR)
 MIME_ICON_DIR = $(DESTDIR)$(SYS_MIME_ICON_DIR)
 SYS_MIME_POPICON_DIR =$(SYS_POPICON_DIR)/scalable/$(MIMETYPES_DIR)
+MIME_POPICON_DIR = $(DESTDIR)$(SYS_MIME_POPICON_DIR)
 APP_ICON_DIR = $(DESTDIR)$(SYS_APP_ICON_DIR)
 APP_POPICON_DIR = $(DESTDIR)$(SYS_APP_POPICON_DIR)
 
 SOURCEICON = QRLauncher.svg
 TARGETICON = QRLauncher.svg
 TARGETICON_PNG = QRLauncher.png
-
-
 
 SOURCE_CFILE_ICON = QRLConf.svg
 TARGET_CFILE_ICON = application-vnd.bzdev.qrlauncher-config.svg
@@ -72,13 +71,14 @@ POPICON_WIDTHS2x = 8 16 24 32 48 64 128 256
 
 DEB = qrlauncher_$(VERSION)_all.deb
 POP_DEB = qrlauncher-pop-icons_$(VERSION)_all.deb
-SYS_POP_DOCDIR = /usr/share/doc/epts-pop-icons
+SYS_POP_DOCDIR = /usr/share/doc/qrlauncher-pop-icons
 POP_DOCDIR=$(DESTDIR)$(SYS_POP_DOCDIR)
 
 
 jarfile: qrlauncher.jar
 
-release: qrlauncher.jar $(DEB) qrlauncher-install-$(VERSION).jar
+release: qrlauncher.jar $(DEB) newpopchangelog $(POP_DEB) \
+	qrlauncher-install-$(VERSION).jar
 
 qrlauncher.jar: QRLauncher.java QRLauncher.svg dndTarget.png
 	mkdir -p classes
@@ -95,8 +95,10 @@ qrlauncher.jar: QRLauncher.java QRLauncher.svg dndTarget.png
 	cp QRL.properties classes
 	jar cf qrlauncher.jar -C classes .
 
-install: qrlauncher.jar
+install: qrlauncher.jar ReadMe qrl.sh qrl.1 qrl.5 QRLauncher.desktop \
+		$(SOURCEICON) $(SOURCE_CFILE_ICON) changelog
 	install -d $(DOCDIR)
+	install -m 0644 ReadMe $(DOCDIR)
 	install -d $(QRLAUNCHERDIR)
 	install -d $(MIME_ICON_DIR)
 	install -d $(MIMEDIR)
@@ -153,13 +155,30 @@ install: qrlauncher.jar
 	install -m 0644 changelog.gz $(DOCDIR)
 	rm changelog.gz
 	install -m 0644 copyright $(DOCDIR)
+	sed s/VERSION/"$(VERSION)"/ deb/changelog.Debian \
+	    | sed s/DATE/"$(DATE)"/ | gzip -9 -n > changelog.Debian.gz
+	install -m 0644 -T changelog.Debian.gz \
+		$(DOCDIR)/changelog.Debian.gz
 
-install-pop: popchangelog popchangelog.Debian copyright
+install-pop: popchangelog deb/popchangelog.Debian copyright ReadMe
 	install -d $(APP_POPICON_DIR)
 	install -d $(MIME_POPICON_DIR)
 	install -m 0644 -T $(SOURCEICON) $(APP_POPICON_DIR)/$(TARGETICON)
 	install -m 0644 -T $(SOURCE_CFILE_ICON) \
 		$(MIME_POPICON_DIR)/$(TARGET_CFILE_ICON)
+	install -d $(POP_DOCDIR)
+	install -m 0644 copyright $(POP_DOCDIR)
+	gzip -9 -n < popchangelog > popchangelog.gz
+	install -m 0644 -T popchangelog.gz $(POP_DOCDIR)/changelog.gz
+	rm popchangelog.gz
+	sed s/VERSION/"$(VERSION)"/ deb/popchangelog.Debian \
+	    | sed s/DATE/"$(DATE)"/ | gzip -9 -n > popchangelog.Debian.gz
+	install -m 0644 -T popchangelog.Debian.gz \
+		$(POP_DOCDIR)/changelog.Debian.gz
+	rm popchangelog.Debian.gz
+	install -m 0644 ReadMe $(POP_DOCDIR)
+
+
 deb: $(DEB)
 
 debLog:
@@ -168,6 +187,14 @@ debLog:
 		| gzip -n -9 > changelog.Debian.gz
 	install -m 0644 changelog.Debian.gz $(DOCDIR)
 	rm changelog.Debian.gz
+
+popDebLog:
+	sed -e s/VERSION/$(VERSION)/ deb/popchangelog.Debian \
+		| sed -e "s/DATE/$(DATE)/" \
+		| gzip -n -9 > changelog.Debian.gz
+	install -m 0644 changelog.Debian.gz $(POP_DOCDIR)
+	rm changelog.Debian.gz
+
 
 $(DEB): deb/control copyright changelog deb/changelog.Debian \
 		deb/postinst deb/postrm qrlauncher.jar \
@@ -185,7 +212,21 @@ $(DEB): deb/control copyright changelog deb/changelog.Debian \
 	fakeroot dpkg-deb --build BUILD
 	mv BUILD.deb $(DEB)
 
-$(POP_DEB):
+$(POP_DEB): deb/popicons-control copyright QRLauncher.svg QRLConf.svg \
+		deb/popchangelog.Debian deb/popicons-postinst \
+		deb/popicons-postrm
+	mkdir -p BUILD_POP
+	(cd BUILD_POP ; rm -rf usr DEBIAN)
+	mkdir -p BUILD_POP/DEBIAN
+	$(MAKE) install-pop DESTDIR=BUILD_POP
+	sed s/VERSION/$(VERSION)/ deb/popicons-control > \
+		BUILD_POP/DEBIAN/control
+	cp deb/popicons-postinst BUILD_POP/DEBIAN/postinst
+	chmod 0755 BUILD_POP/DEBIAN/postinst
+	cp deb/popicons-postrm BUILD_POP/DEBIAN/postrm
+	chmod 0755 BUILD_POP/DEBIAN/postrm
+	fakeroot dpkg-deb --build BUILD_POP
+	mv BUILD_POP.deb $(POP_DEB)
 
 installer: qrlauncher-install-$(VERSION).jar
 
@@ -195,15 +236,16 @@ qrlauncher-install-$(VERSION).jar: qrlauncher.jar
 
 
 newpopchangelog:
-	echo "epts-pop-icons ($(VERSION)) unstable; urgency=low" > POPCHANGELOG
+	echo "qrlauncher-pop-icons ($(VERSION)) unstable; urgency=low" \
+		> POPCHANGELOG
 	echo >> POPCHANGELOG
-	echo "  * Synchronized with epts version $(VERSION)" \
+	echo "  * Synchronized with QRLauncher version $(VERSION)" \
 		>> POPCHANGELOG
 	echo >> POPCHANGELOG
 	echo " -- " `git config --get user.name` \
 		'<'`git config --get user.email`'>  '`date -R` >> POPCHANGELOG
 	echo >> POPCHANGELOG
-	git show HEAD:deb/popchangelog >> POPCHANGELOG
+	git show HEAD:popchangelog >> POPCHANGELOG
 	cat POPCHANGELOG | git stripspace -s  > popchangelog.tmp
 	cmp -s popchangelog popchangelog.tmp || cp popchangelog.tmp popchangelog
 	rm -f POPCHANGELOG popchangelog.tmp

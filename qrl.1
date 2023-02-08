@@ -9,21 +9,30 @@ qrl
 .br
 .B
 qrl
+[\fI\,OPTION\/\fR]... \fICONF_FILE\fR
+.br
+.B
+qrl
 [\fI\,OPTION\/\fR]...
 .B \-
 
 .SH DESCRIPTION
 .PP
-The program qrl opens a window that allows image files to be dragged
-or pasted into it.  If an image file recognized by Java is dragged
-into the drop location or appears on the command line, a QR code (if
-one exists) in the image will be read and decoded to produce a URL or
-text and the default browser will be "asked" to visit
-that URL or display that text.  A text window displays the file names and
-the URL's they encode, or a status indication if a URL cannot be
-decoded. When a QR Code encodes text that is not a URL, the text will
-be stored in a temporary file. For the format HTML, VCARD, and iCalendar,
-the temporary file will have the file-name extensions
+The program qrl normally opens a window that allows image files to be
+dragged or pasted into it with one exception: if there is a single
+argument,
+.IR CONF_FILE ,
+and that argument is a file name with the extension ".qrl", that file
+is treated as a configuration file used to generate a QR code.
+Otherwise, if an image file recognized by Java is dragged into the
+drop location or appears on the command line, a QR code (if one
+exists) in the image will be read and decoded to produce a URL or text
+and the default browser will be "asked" to visit that URL or display
+that text.  A text window displays the file names and the URL's they
+encode, or a status indication if a URL cannot be decoded. When a QR
+Code encodes text that is not a URL, the text will be stored in a
+temporary file. For the format HTML, VCARD, and iCalendar, the
+temporary file will have the file-name extensions
 .BR html ,
 .BR vcf ,
 and
@@ -166,6 +175,9 @@ written to standard output.  This option must be present to create a
 QR code unless the only non-option argument is a single file ending
 in the file-name extension
 .BR  qrl .
+If there is a
+.B \-o
+option, all non-option arguments are ignored.
 .TP
 .BI \-w\  WIDTH
 The width of the QR CODE in pixels. The default is 100.
@@ -251,6 +263,15 @@ can be used.
 .B \-\-format-aliases
 List the standard names for the image formats that are supported
 and their aliases.
+.TP
+.B \-g
+Open a window that will allow a configuration file to be created.
+The file may be saved, in which case its extension should be
+.BR qrl .
+If the window is closed without terminating the application,
+QRLauncher will generate a QR code.  When present,
+.B \-g
+should be the only option.
 .SH CSS Color Syntax
 .PP
 In addition to using the names printed by running the command
