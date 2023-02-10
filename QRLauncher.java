@@ -45,6 +45,7 @@ import org.bzdev.swing.ConfigPropertyEditor;
 import org.bzdev.swing.DarkmodeMonitor;
 import org.bzdev.swing.ExtObjTransferHandler;
 import org.bzdev.swing.FileNameCellEditor;
+import org.bzdev.swing.HtmlPane;
 import org.bzdev.swing.SimpleConsole;
 import org.bzdev.swing.table.CSSTableCellRenderer;
 
@@ -601,6 +602,34 @@ public class QRLauncher {
 	}
     }
 
+    private static  void showHelp() {
+	Handlers.enable();
+	SwingUtilities.invokeLater(() -> {
+		DarkmodeMonitor.setSystemPLAF();
+		DarkmodeMonitor.init();
+	    });
+	SwingUtilities.invokeLater(() -> {
+		try {
+		    URL url = new URL(localeString("helpURL"));
+		    HtmlPane htmlPane= new HtmlPane(url);
+		    htmlPane.setSize(800, 600);
+		    JFrame frame = new JFrame(localeString("help"));
+		    Container hpane = frame.getContentPane();
+		    hpane.setLayout(new BorderLayout());
+		    frame.addWindowListener(new WindowAdapter () {
+			    public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			    }
+			});
+		    hpane.add(htmlPane, "Center");
+		    frame.setSize(800,600);
+		    frame.setVisible(true);
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+	    });
+    }
+
 
     public static void main(String argv[]) throws Exception {
 	int index = 0;
@@ -792,7 +821,12 @@ public class QRLauncher {
 		}
 		System.exit(0);
 	    } else if (argv[index].equals("-g")) {
-		    config(new File(cwd), null);
+		config(new File(cwd), null);
+	    } else if (argv[index].equals("--help")) {
+		showHelp();
+		// main should exit because showHelp() opens a
+		// window.
+		return;
 	    } else if (argv[index].startsWith("-")) {
 		    System.err.println(localeString("qrl") +" - "
 				       + localeString("unrecognizedOption")

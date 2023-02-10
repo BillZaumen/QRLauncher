@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<TITLE>HTML Test</TITLE>
+</HEAD>
+<BODY>
+  <CENTER><FONT size="+3"><B>QRLauncher Manual</B></FONT></CENTER>
+<BR>
+<P>
+  QRLauncher is a simple utility that can both read and generate QR
+  Codes.  When the command <CODE>qrl</CODE> is run with no arguments,
+  or when the corresponding desktop file is left-clicked, a window
+  will open. Dragging image files (ones that java recognizes) into
+  this window will result in a web browser or other suitable program
+  opening the data contained in the QR code.
+<P>
+  When the command <CODE>qrl -g</CODE> is run, or the desktop action
+  for generating QR codes is selected, a dialog box will display a
+  table.  The left side of the table contains <EM>properties</EM>
+  and the right side contains the corresponding values.  The
+  properties are:
+  <UL>
+    <LI><STRONG>Input.uri</STRONG> or <STRONG>Input.file</STRONG>.
+      The first line will contain one of these properties. Unlike
+      the others, this property can be edited by selecting the desired
+      item from a list that will be displayed when the table cell is clicked.
+    <LI><STRONG>Width</STRONG>. The width of the QR code in pixels.
+    <LI><STRONG>Height</STRONG>. The height of the QR code in pixels.
+    <LI><STRONG>Foreground.color</STRONG>. The color of the QR Code that
+      will be generated.
+    <LI><STRONG>Background.color</STRONG>. The color of the background
+      behind the QR code that will be generated.
+    <LI><STRONG>ErrorCorrection.Level</STRONG>. The error-correction level
+      for the QR Code. When the value is clicked, a list of choices will
+      be displayed: <STRONG>L</STRONG> to be able to correct damage to 7%
+      of a QR code ,
+      <STRONG>M</STRONG> to be able to correct damage to 15% of a QR code.
+      <STRONG>Q</STRONG> to be able to correct damage to 25% of a QR code, and
+      <STRONG>H</STRONG> to be able to correct damage to 30% of a QR code.
+    <LI><STRONG>QRCode.imageFormat</STRONG>. This value, when clicked
+      provides a list of the image formats that can be generated. The
+      default choice is PNG. Changing the image format will clear the
+      value giving the file name.
+    <LI><STRONG>QRCode.file</STRONG>. This option, when clicked, opens
+      a dialog box for choosing files. The types appropriate for the
+      current image format will be shown.
+  </UL>
+  For the properties <STRONG>Width</STRONG> and <STRONG>Height</STRONG>,
+  entering <CODE>$(Height)</CODE> or <CODE>$(Width)</CODE> respectively
+  will result in <STRONG>Width</STRONG> and <STRONG>Height</STRONG> having
+  the same values.  This can be done for one of these two properties but
+  not both.
+<P>
+  There are a number of command-line arguments and those can be used to
+  generate QR codes as well.  These are described in the manual pages
+  for <STRONG>qrl</STRONG>.
+</BODY>
+</HTML>
+<!--  LocalWords:  QRLauncher uri ErrorCorrection QRCode imageFormat
+ -->
+<!--  LocalWords:  PNG qrl
+ -->

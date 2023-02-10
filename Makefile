@@ -10,7 +10,7 @@
 # packages libzxing-core-java and libzxing-javase-java.
 
 
-VERSION = 1.3
+VERSION = 1.4
 
 DATE = $(shell date -R)
 
@@ -93,6 +93,7 @@ qrlauncher.jar: QRLauncher.java QRLauncher.svg dndTarget.png
 	done
 	cp dndTarget.png classes
 	cp QRL.properties classes
+	cp help.html classes
 	jar cf qrlauncher.jar -C classes .
 
 install: qrlauncher.jar ReadMe qrl.sh qrl.1 qrl.5 QRLauncher.desktop \
