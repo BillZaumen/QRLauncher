@@ -434,6 +434,7 @@ public class QRLauncher {
 	}
 	private FileFilter filter = getFileFilter();
 
+	private boolean hasHelpWindow = false;
 	public ConfigEditor() {
 	    super();
 	    addIcon(QRLauncher.class, "QRLConf16.png");
@@ -512,6 +513,33 @@ public class QRLauncher {
 			outputFileEditor.setFileFilter(filter);
 		    }
 		});
+	    JMenuItem helpMenuItem = new JMenuItem(localeString("help"));
+	    helpMenuItem.setEnabled(true);
+	    helpMenuItem.addActionListener((ae) -> {
+		    if (hasHelpWindow) return;
+		    try {
+			ProcessBuilder pb = new ProcessBuilder
+			    (System.getProperty("qrl.cmd"), "--help");
+			pb.inheritIO();
+			Process p = pb.start();
+			hasHelpWindow = true;
+			helpMenuItem.setEnabled(false);
+			new Thread(() -> {
+				try {
+				    p.waitFor();
+				} catch(Exception ie) {}
+				SwingUtilities.invokeLater(()->{
+				    hasHelpWindow = false;
+				    helpMenuItem.setEnabled(true);
+				    });
+
+			}).start();
+		    } catch (Exception e) {
+			System.err.println("qrl: " + e.getMessage());
+			System.exit(1);
+		    }
+		});
+	    setHelpMenuItem(helpMenuItem);
 	}
 
 	public String errorTitle() {return "QRLauncher Error";}
