@@ -1,0 +1,16 @@
+Package: qrlauncher-pop-icons
+Version: VERSION
+Section: contrib/doc
+Priority: optional
+Architecture: all
+Depends: pop-icon-theme
+Maintainer: Bill Zaumen <bill.zaumen+software@gmail.com>
+Description: Gnome support for QRLauncher icons for Pop OS.
+ This package provides the icons for various mime types
+ specific to QRLauncher. The GUI for Pop OS does not find
+ icons in /usr/share/icons/hicolor, so for that case the
+ icons have to be in /usr/share/icons/Pop. This installion
+ will fail if the icons are already installed and owned by
+ a different package.  The dependency on pop-icon-theme is
+ intended to prevent this package from being installed on
+ systems that do not use the Pop OS icons.

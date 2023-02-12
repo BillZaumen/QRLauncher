@@ -254,7 +254,7 @@ newpopchangelog:
 
 clean:
 	rm -f classes/*
-	rm -rf BUILD
+	rm -rf BUILD BUILD_POP
 	(cd inst; make clean);
 
 superclean: clean

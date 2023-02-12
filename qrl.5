@@ -1,0 +1,77 @@
+.TH QRL "5" "Feb 2023" "qrl VERSION" "File Formats and Conventions"
+.SH NAME
+qrl \- QRLauncher configuration-file format
+.SH DESCRIPTION
+QRLauncher configuration files must have the file-name extension
+.BR qrl .
+These files use the format described in the API documentation for
+the Java method
+.BR java.util.Properties.load(Reader) .
+In addition, each line is terminated by the CRLF sequence and
+the first line must be
+.br
+
+.br
+.B
+#(!M.T application/vnd.bzdev.qrlauncher-config)
+.br
+
+.br
+\fRThis line is a comment that is recognized as indicating the file's
+media type.
+.PP
+The properties (these are case sensitive) that are recognized are
+.TP
+.B Input.uri
+The URI to encode.
+This property and
+.B Input.file
+are mutually exclusive.
+.TP
+.B Input.file
+A file whose contents will be encoded.
+This property and
+.B Input.uri
+are mutually exclusive.
+.TP
+.B Width
+The width of the generated image in pixels.
+.TP
+.B Height
+The height of the generated image in pixels.
+.TP
+.B Foreground.color
+The foreground color represented as a CSS color specification.
+.TP
+.B Background.color
+The background color represented as a CSS color specification.
+.TP
+.B ErrorCorrection.level
+The error correction level
+.BR L ,
+.BR M ,
+.BR Q ,
+or
+.BR H ,
+which indicate that a QR code will be readable when the portion of
+the QR code that is damaged is approximately 7%, 15%, 25%, or 30%
+respectively.
+.TP
+.B QRCode.imageFormat
+The format of the image that will contain a QR Code.  Note that
+while SVG images can optionally be generated, QRLauncher will not
+read those.
+.TP
+.B QRCode.file
+The name of the file for the QR Code that will be generated.
+.PP
+While files using this format can be easily created using a
+text editor, it will usually be more convenient to use the
+command
+.IP
+qrl \-g
+.PP
+or the corresponding desktop action to create the file.
+
+\"  LocalWords:  QRL qrl QRLauncher CRLF br TP uri QRCode SVG
+\"  LocalWords:  ErrorCorrection imageFormat

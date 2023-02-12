@@ -48,6 +48,10 @@ Desktop file:
 
 ![Desktop Icon](https://billzaumen.github.io/QRLauncher/desktop.png)
 
+Configuration file for QR code generation:
+
+![Generator-File Icon](https://billzaumen.github.io/QRLauncher/bzdev-qrl.png)
+
 Application window:
 
 ![QRLauncher window](https://billzaumen.github.io/QRLauncher/screenshot.png)
