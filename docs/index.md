@@ -29,7 +29,15 @@ sudo apt isntall libosgbatik-java
 ```
 
 The file setup.sh contains commands for configuring apt to use the
-repository that contains the necessary Debian packages.
+repository that contains the necessary Debian packages. For Pop!_OS
+systems, the following command should also be run:
+
+```
+sudo apt install qrlauncher-pop-icons
+```
+
+Otherwise Pop!_OS will use generic icons instead of ones specific to
+this application.
 
 For non-linux systems, download the QRLauncher installer listed on
 the [installer page](https://billzaumen.github.io/bzdev/installers.html).
