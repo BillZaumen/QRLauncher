@@ -66,6 +66,7 @@ public class QRLauncher {
     static SimpleConsole tc = null;
     static Appendable output = null;
     static boolean launch = true;
+    static boolean geth = false;
     static boolean exitMode = false;
     static JFrame frame;
     static ExtObjTransferHandler th;
@@ -95,8 +96,12 @@ public class QRLauncher {
 	    String uri = (new MultiFormatReader().decode(bitmap))
 		.getText();
 	    URI u = null;
+	    boolean foundHttpURL = false;
 	    try {
 		u = new URI(uri);
+		String scheme = u.getScheme();
+		foundHttpURL = (scheme != null) &&
+		    (scheme.equals("http") || scheme.equals("https"));
 	    } catch (URISyntaxException euri) {
 		// Assume what was decoded is not a URI,
 		// so create a text file containing the data.
@@ -129,19 +134,23 @@ public class QRLauncher {
 			    mode = 1;
 			    tst = uri.substring(6+9);
 			} else if (tst.startsWith("VEVENT")) {
-			    // The people implemnting this apparently
-			    // can't be bothered to use VCALENDAR, so
-			    // we'll add a wrapper.
-			    //
-			    // In case they forgot the ending CRLF ...
-			    char ch = uri.charAt(uri.length() - 1);
-			    if (ch != '\r' && ch != '\n') {
-				uri = uri + "\r\n";
-			    }
 			    tst = uri.substring(6 + 6);
-			    uri = "BEGIN:VCALENDAR\r\n" + uri
-				+ "END:VCALENDAR\r\n";
-			    mode = 1;
+			    if(tst.length() > 2 &&
+			       ((tst.charAt(0) == '\r' && tst.charAt(1) == '\n')
+				|| tst.charAt(0) == '\n')) {
+				// The people implemnting this apparently
+				// can't be bothered to use VCALENDAR, so
+				// we'll add a wrapper.
+				//
+				// In case they forgot the ending CRLF ...
+				char ch = uri.charAt(uri.length() - 1);
+				if (ch != '\r' && ch != '\n') {
+				    uri = uri + "\r\n";
+				}
+				uri = "BEGIN:VCALENDAR\r\n" + uri
+				    + "END:VCALENDAR\r\n";
+				mode = 1;
+			    }
 			}
 			if (tst.length() > 2 && mode != -1 &&
 			    ((tst.charAt(0) == '\r' && tst.charAt(1) == '\n')
@@ -201,8 +210,25 @@ public class QRLauncher {
 		if (output != tc && tc != null) {
 		    tc.append(contents);
 		}
+	    } else if (geth && foundHttpURL) {
+		String gethPath =
+		    System.getProperty("qrl.cmd").replace("qrl","gethdrs");
+		File gethFile = new File(gethPath);
+		if (!gethFile.canExecute()) {
+		    gethPath = gethPath.replace("qrlauncher","gethdrs");
+		    gethFile = new File (gethPath);
+		}
+		if (gethFile.canExecute()) {
+		    ProcessBuilder pb = new ProcessBuilder(gethPath,
+							   u.toString());
+		    pb.redirectErrorStream(true);
+		    Process p = pb.start();
+		    InputStreamReader r = new
+			InputStreamReader(p.getInputStream());
+		    r.transferTo(new AppendableWriter(output));
+		    p.waitFor();
+		}
 	    }
-			
 	} catch (Exception e) {
 	    String msg = e.getMessage();
 	    if (output != null) {
@@ -855,6 +881,9 @@ public class QRLauncher {
 		// main should exit because showHelp() opens a
 		// window.
 		return;
+	    } else if (argv[index].equals("-H")) {
+		geth = true;
+		launch = false;
 	    } else if (argv[index].startsWith("-")) {
 		    System.err.println(localeString("qrl") +" - "
 				       + localeString("unrecognizedOption")

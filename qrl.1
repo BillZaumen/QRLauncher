@@ -130,6 +130,16 @@ URLs.  The main use of the
 option occurs when relative file names are read from standard input and
 the corresponding files are in a different directory.
 .TP
+.B \-H
+This option causes headers for HTTP and HTTPS URLs to be printed, either
+to a window or to standard output, provided that the program
+.B gethdrs
+has also been installed. The
+.B \-H
+option implies the
+.B \-n
+option.
+.TP
 .B \-n
 Do not launch a web browser and instead just list the image files and
 the URL they encoded or some status and possibly error messages if a
