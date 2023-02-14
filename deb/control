@@ -4,7 +4,7 @@ Section: contrib/utils
 Priority: optional
 Architecture: all
 Depends: default-jdk, libbzdev-desktop-java (>= 2.0.41), libzxing-core-java (>= 3.4.1), libzxing-java (>= 3.4.1), libzxing-javase-java (>=3.4.1)
-Recommends: libosgbatik-java (>= 0.4.2), gethdrs (>= 1.1.0)
+Recommends: libosgbatik-java (>= 0.4.2), gethdrs (>= 1.1.1)
 Maintainer: Bill Zaumen <bill.zaumen+software@gmail.com>
 Description: Utility that opens dzta/URLs in QR codes or creates QR codes.
  The image formats supported are those that Java recognizes, and there

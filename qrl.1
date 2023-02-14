@@ -152,13 +152,24 @@ option is in effect with the
 .B \-n
 option, the
 .B \-p
-option is implied.
+option is implied. If the
+.B \-q
+option was set, that option is removed.
 .TP
 .B \-p
 Automatically print the file names and corresponding URLs or status to
 standard output.
+.TP
+.B \-q
+Ask the user for permision before opening a URL with a browser. This
+will also remove any previous
+.B \-n
+option.  When the
+.B \-e
+option is also present, requests for permission will use the
+console rather than a dialog box.
 .P
-The options for writing QR codes are
+The options for creating QR codes are
 .TP
 .BI \-u\  URI
 The URI to use as an input.

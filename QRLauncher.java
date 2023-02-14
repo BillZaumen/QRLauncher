@@ -67,6 +67,7 @@ public class QRLauncher {
     static Appendable output = null;
     static boolean launch = true;
     static boolean geth = false;
+    static boolean queryMode = false;
     static boolean exitMode = false;
     static JFrame frame;
     static ExtObjTransferHandler th;
@@ -188,6 +189,19 @@ public class QRLauncher {
 		    if (desktop.isSupported(Desktop.Action.BROWSE)) {
 			if (exitMode) {
 			    try {
+				if (queryMode) {
+				    java.io.Console console = System.console();
+				    if (console != null) {
+					console.format(localeString("query"),
+						       u.toString(), " ");
+					console.flush();
+					String reply = console.readLine()
+					    .trim().toLowerCase();
+					if (reply.charAt(0) != 'y') {
+					    return;
+					}
+				    }
+				}
 				desktop.browse(u);
 			    } catch (IOException eio) {
 				System.err.println(eio.getMessage());
@@ -196,6 +210,20 @@ public class QRLauncher {
 			    URI uu = u;
 			    SwingUtilities.invokeLater(() -> {
 				    try {
+					if (queryMode) {
+					    int status = JOptionPane
+						.showConfirmDialog
+						(frame,
+						 String.format
+						 (localeString("queryMsg"),
+						  uu.toString()),
+						 localeString("queryTitle"),
+						 JOptionPane.OK_CANCEL_OPTION);
+					    if (status !=
+						JOptionPane.OK_OPTION) {
+						return;
+					    }
+					}
 					desktop.browse(uu);
 				    } catch (IOException eio) {
 					System.err.println(eio.getMessage());
@@ -219,14 +247,19 @@ public class QRLauncher {
 		    gethFile = new File (gethPath);
 		}
 		if (gethFile.canExecute()) {
-		    ProcessBuilder pb = new ProcessBuilder(gethPath,
+		    ProcessBuilder pb = new ProcessBuilder(gethPath, "-r",
 							   u.toString());
 		    pb.redirectErrorStream(true);
 		    Process p = pb.start();
 		    InputStreamReader r = new
 			InputStreamReader(p.getInputStream());
+		    output.append('\n');
 		    r.transferTo(new AppendableWriter(output));
-		    p.waitFor();
+		    int status = p.waitFor();
+		} else {
+		    output.append("\n");
+		    output.append(String.format(localeString("noExec"),
+						gethPath));
 		}
 	    }
 	} catch (Exception e) {
@@ -705,6 +738,7 @@ public class QRLauncher {
 		output = System.out;
 	    } else if (argv[index].equals("-n")) {
 		launch = false;
+		queryMode = false;
 	    } else if (argv[index].equals("-d")) {
 		index++;
 		if (index < argv.length) {
@@ -884,6 +918,9 @@ public class QRLauncher {
 	    } else if (argv[index].equals("-H")) {
 		geth = true;
 		launch = false;
+	    } else if (argv[index].equals("-q")) {
+		queryMode = true;
+		launch = true;
 	    } else if (argv[index].startsWith("-")) {
 		    System.err.println(localeString("qrl") +" - "
 				       + localeString("unrecognizedOption")

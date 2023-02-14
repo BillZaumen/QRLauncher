@@ -1,3 +1,11 @@
+qrlauncher (1.7) unstable; urgency=low
+
+  * Changed the -H option to use gethdrs -r so most headers will not be
+    shown, only an indication of a redirect. Added a -q option, which
+    asks the user for permission before opening a URL with a browser.
+
+ --  Bill Zaumen <bill.zaumen@gmail.com>  Mon, 13 Feb 2023 10:54:03 -0800
+
 qrlauncher (1.5) unstable; urgency=low
 
   * Added a help option and some GUI improvements.

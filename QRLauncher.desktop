@@ -11,7 +11,7 @@ Type=Application
 Icon=/usr/share/icons/hicolor/scalable/apps/QRLauncher.svg
 Categories=Utility;
 StartupNotify=false
-Actions=create;decode;show;help
+Actions=create;decode;show;query;help
 
 [Desktop Action create]
 Name = New QR Code
@@ -24,6 +24,10 @@ Exec = qrl -n
 [Desktop Action show]
 Name = Show Headers
 Exec = qrl -H
+
+[Desktop Action query]
+Name = Ask before opening
+Exec = qrl -q
 
 [Desktop Action help]
 Name = Display Help
