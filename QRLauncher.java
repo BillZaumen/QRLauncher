@@ -56,6 +56,18 @@ import com.google.zxing.qrcode.encoder.ByteMatrix;
 
 public class QRLauncher {
 
+
+
+    private static URI STDIN_URI = null;
+    static {
+	try {
+	    STDIN_URI = new URI("stdin:localhost");
+	} catch (Exception e) {
+	    System.err.println("qrl: couuld not initialize STDIN_URI");
+	    System.exit(1);
+	}
+    }
+
     static private final String resourceBundleName = "QRL";
     static ResourceBundle bundle = ResourceBundle.getBundle(resourceBundleName);
     public static String localeString(String name) {
@@ -69,6 +81,7 @@ public class QRLauncher {
     static boolean geth = false;
     static boolean queryMode = false;
     static boolean exitMode = false;
+    static boolean contentsOnly = false;
     static JFrame frame;
     static ExtObjTransferHandler th;
     static final String targetHTML = "<HTML><BODY>"
@@ -83,12 +96,16 @@ public class QRLauncher {
     static LinkedList<URI> uriList = new LinkedList<>();
     static void doAdd(URL url) throws IOException {
 	try {
-	    if (output != null) output.append("" + url);
-	    if (output != tc && tc != null) {
-		tc.append("" + url);
+	    if (contentsOnly == false) {
+		String urlString = (url == null)? "[ stdin ]":
+		    url.toString();
+		if (output != null) output.append("" + urlString);
+		if (output != tc && tc != null) {
+		    tc.append("" + urlString);
+		}
 	    }
 	    String contents = null;
-	    InputStream is = url.openStream();
+	    InputStream is = (url == null)? System.in: url.openStream();
 	    BufferedImage bufferedImage = ImageIO.read(is);
 	    LuminanceSource source = new
 		BufferedImageLuminanceSource(bufferedImage);
@@ -169,19 +186,25 @@ public class QRLauncher {
 		}
 		// found the suffix so create a tmp file and use that
 		// to get the URI.
-		File tmp = File.createTempFile("qrl-url-contents", suffix);
-		tmp.deleteOnExit();
-		PrintWriter w = new PrintWriter(tmp, "UTF-8");
-		contents = uri;
-		w.print(uri);
-		w.close();
-		u = tmp.toURI();
-		uri = "[ " + u.toString() + " ]";
+		if (contentsOnly == false) {
+		    File tmp = File.createTempFile("qrl-url-contents", suffix);
+		    tmp.deleteOnExit();
+		    PrintWriter w = new PrintWriter(tmp, "UTF-8");
+		    contents = uri;
+		    w.print(uri);
+		    w.close();
+		    u = tmp.toURI();
+		    uri = "[ " + u.toString() + " ]";
+		}
 	    }
 
-	    if (output != null) output.append(" \u2192 " + uri);
-	    if (output != tc && tc != null) {
-		tc.append(" \u2192 " + uri);
+	    if (contentsOnly) {
+		contents = uri;
+	    } else {
+		if (output != null) output.append(" \u2192 " + uri);
+		if (output != tc && tc != null) {
+		    tc.append(" \u2192 " + uri);
+		}
 	    }
 	    if (launch) {
 		if (Desktop.isDesktopSupported()) {
@@ -233,7 +256,9 @@ public class QRLauncher {
 		    }
 		}
 	    } else if (contents != null) {
-		contents = " ...\n" + contents + "\n------------";
+		if (contentsOnly == false) {
+		    contents = " ...\n" + contents + "\n------------";
+		}
 		if (output != null) output.append(contents);
 		if (output != tc && tc != null) {
 		    tc.append(contents);
@@ -264,18 +289,26 @@ public class QRLauncher {
 	    }
 	} catch (Exception e) {
 	    String msg = e.getMessage();
-	    if (output != null) {
-		output.append (" " + localeString("FAILED")
+	    if (contentsOnly == false) {
+		if (output != null) {
+		    output.append (" " + localeString("FAILED")
+				   + (msg == null? "": " - " + msg));
+		}
+		if (output != tc && tc != null) {
+		    tc.append (" " + localeString("FAILED")
 			       + (msg == null? "": " - " + msg));
-	    }
-	    if (output != tc && tc != null) {
-		tc.append (" " + localeString("FAILED")
-			   + (msg == null? "": " - " + msg));
+		}
+	    } else {
+		System.err.println(localeString("qrl") + ": FAILED"
+				   + (msg == null? "": " - " + msg));
+		System.exit(1);
 	    }
 	}
-	if (output != null) output.append("\n");
-	if (output != tc && tc != null) {
-	    tc.append("\n");
+	if (contentsOnly == false) {
+	    if (output != null) output.append("\n");
+	    if (output != tc && tc != null) {
+		tc.append("\n");
+	    }
 	}
     }
 
@@ -375,7 +408,9 @@ public class QRLauncher {
 		}
 		protected void addURL(URL url) {
 		    try {
-			doAdd(url);
+			if (url != null) {
+			    doAdd(url);
+			}
 		    } catch (IOException eio) {}
 		}
 	    };
@@ -407,6 +442,8 @@ public class QRLauncher {
         g2d.drawRect(x, y, w, h);
     }
 
+    private static int MIN_MULT = 16;
+
 
     static void qrEncode(String text, File cdir,
 			 String iformat,
@@ -429,15 +466,6 @@ public class QRLauncher {
 	    OutputStream os = pathname.equals("-")? System.out:
 		new FileOutputStream(f.isAbsolute()? f:
 				     new File(cdir, pathname));
-	    OutputStreamGraphics osg = OutputStreamGraphics
-		.newInstance(os, width, height, iformat, true);
-	    Graphics2D g2d = osg.createGraphics();
-	    if (bgColor != null && bgColor.getAlpha() != 0) {
-		g2d.setColor(bgColor);
-		drawRect(g2d, 0, 0, width, height);
-	    }
-	    g2d.setColor(fgColor);
-	    g2d.setStroke(new BasicStroke(0.5F));
 	    // Set up by copying from QRCodeWriter in zxing
 	    ByteMatrix input = code.getMatrix();
 	    int inputWidth = input.getWidth();
@@ -450,6 +478,27 @@ public class QRLauncher {
 				    outputHeight / qrHeight);
 	    int leftPadding = (outputWidth - (inputWidth * multiple)) / 2;
 	    int topPadding = (outputHeight - (inputHeight * multiple)) / 2;
+
+	    if (multiple < MIN_MULT) {
+		// We got it to work with a multiple of 14 but we should
+		// leave a safety margin
+		int m1 = outputWidth /qrWidth;
+		int m2 = outputHeight /qrHeight;
+		if (m1 < MIN_MULT) outputWidth += (MIN_MULT-m1)*qrWidth;
+		if (m2 < MIN_MULT) outputHeight += (MIN_MULT-m2)*qrHeight;
+		multiple = Math.min(outputWidth / qrWidth,
+				    outputHeight / qrHeight);
+	    }
+
+	    OutputStreamGraphics osg = OutputStreamGraphics
+		.newInstance(os, outputWidth, outputHeight, iformat, true);
+	    Graphics2D g2d = osg.createGraphics();
+	    if (bgColor != null && bgColor.getAlpha() != 0) {
+		g2d.setColor(bgColor);
+		drawRect(g2d, 0, 0, outputWidth, outputHeight);
+	    }
+	    g2d.setColor(fgColor);
+	    g2d.setStroke(new BasicStroke(0.5F));
 
 	    for (int inputY = 0, outputY = topPadding;
 		 inputY < inputHeight; inputY++, outputY += multiple) {
@@ -921,6 +970,18 @@ public class QRLauncher {
 	    } else if (argv[index].equals("-q")) {
 		queryMode = true;
 		launch = true;
+	    } else if (argv[index].equals("-C")) {
+		contentsOnly = true;
+		queryMode = false;
+		launch = false;
+		geth = false;
+		output = System.out;
+		index++;
+		break;
+	    } else if (argv[index].equals("-")) {
+		// assume an '-' alone denotes standard input and is
+		// therefore a filename/url argument.
+		break;
 	    } else if (argv[index].startsWith("-")) {
 		    System.err.println(localeString("qrl") +" - "
 				       + localeString("unrecognizedOption")
@@ -971,7 +1032,7 @@ public class QRLauncher {
 
 	if (index  < argv.length) {
 	    String arg = argv[index];
-	    if (arg.equals("-")) {
+	    if (contentsOnly == false && arg.equals("-")) {
 		// Set args by reading from stdin
 		LineNumberReader reader =
 		    new LineNumberReader(new InputStreamReader(System.in,
@@ -994,7 +1055,6 @@ public class QRLauncher {
 		System.exit(0);
 	    }
 	}
-
 	while (index < argv.length) {
 	    String arg = argv[index];
 	    if (arg.startsWith("http:") || arg.startsWith("https:")
@@ -1015,16 +1075,29 @@ public class QRLauncher {
 		} catch (URISyntaxException eurl) {
 		    System.err.println(localeString("badURI"));
 		}
+	    } else if (arg.equals("-")) {
+		uriList.add(STDIN_URI);
 	    } else {
 		File f = new File(arg);
 		uriList.add((f.isAbsolute()? f: new File (cwd, arg)).toURI());
 	    }
 	    index++;
 	}
-	if (exitMode) {
-	    if (launch == false) output = System.out;
+	if (exitMode || contentsOnly) {
+	    if (launch == false || contentsOnly) output = System.out;
+	    boolean sawStdin = false;
 	    for (URI u: uriList) {
-		doAdd(u.toURL());
+		if (u==STDIN_URI) {
+		    if (sawStdin) {
+			System.err.println(localeString("qrl") + ": "
+					   + localeString("multipleStdin"));
+			System.exit(1);
+		    }
+		    doAdd(null);
+		    sawStdin = true;
+		} else {
+		    doAdd(u.toURL());
+		}
 	    }
 	    System.exit(0);
 	}

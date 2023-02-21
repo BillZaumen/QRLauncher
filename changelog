@@ -1,3 +1,10 @@
+rlauncher (1.8) unstable; urgency=low
+
+  * Added a -C option that simply prints the contents of QR codes
+    on standard output.
+
+ --  Bill Zaumen <bill.zaumen@gmail.com>  Mon, 20 Feb 2023 15:21:49 -0800
+
 qrlauncher (1.7) unstable; urgency=low
 
   * Changed the -H option to use gethdrs -r so most headers will not be

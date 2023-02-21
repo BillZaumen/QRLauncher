@@ -57,10 +57,13 @@ One can paste file names that are represented as text.  In this case,
 there must be one file name per line.  As usual relative file names are
 resolved against the current working directory.
 .PP
-If the only non-option argument is
+If the first non-option argument is
 .BR \- ,
-file names and URLs are read from standard input, with on name or URL
-per line.  For example,
+and the
+.B \-C
+option was not used, file names and URLs are read from standard input,
+with one file name or URL per line, and any additional arguments will
+be ignored. For example,
 .IP
 .B cat files.txt | egrep '.png$' | qrl \-
 .PP
@@ -70,7 +73,11 @@ that end with
 .B .png
 and arrange for
 .B qrl
-to  decode any QR codes and pass the URIs found to a browser.
+to  decode any QR codes and pass the URIs found to a browser. If the
+.B \-C
+option was used, the argument
+.B \-
+denotes an image read from standard input and can appear at most once.
 .PP
 If multiple images are provided, a browser may respond quickly to the
 first but with a noticeable delay for the others. Passing a URL to a
@@ -161,13 +168,27 @@ Automatically print the file names and corresponding URLs or status to
 standard output.
 .TP
 .B \-q
-Ask the user for permision before opening a URL with a browser. This
+Ask the user for permission before opening a URL with a browser. This
 will also remove any previous
 .B \-n
 option.  When the
 .B \-e
 option is also present, requests for permission will use the
 console rather than a dialog box.
+.TP
+.B \-C
+Send the contents of a QR code to standard output.
+When used, the
+.B \-C
+option is the only option that will be recognized and all subsequent
+arguments are treated as file names or URLs, with
+.B \-
+denoting standard input. Standard input can be used at most once.
+The
+.B \-\-
+option is not recognized after a
+.B \-C
+option and instead is treated as a file name.
 .P
 The options for creating QR codes are
 .TP
@@ -302,7 +323,7 @@ option.
 .PP
 In addition to using the names printed by running the command
 .IP
-qrl --colors
+qrl \-\-colors
 .PP
 colors can be specified as follows:
 .TP
@@ -347,5 +368,5 @@ QR codes.
 \"  LocalWords:  JREs UTF PATHNAME whitespace jpeg gif bmp wbmp ps GG
 \"  LocalWords:  svg libosgbatik svgz gzip PostScript EPS eps epsi fB
 \"  LocalWords:  RRGGBB ffffff rgb fIRED fIGREEEN fIBLUE rgba fIALPHA
-\"  LocalWords:  hsl fISATURATION hsla fILIGHTNESS fIHUE
-\"  LocalWords:  ZXing
+\"  LocalWords:  hsl fISATURATION hsla fILIGHTNESS fIHUE fICONF CONF
+\"  LocalWords:  ZXing gethdrs QRLauncher
