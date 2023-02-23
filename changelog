@@ -1,4 +1,11 @@
-rlauncher (1.8) unstable; urgency=low
+qrlauncher (1.9) unstable; urgency=low
+
+  * Added the --label and --fontSize options an changed some table-cell
+    editors so that they only except non-negative integral values.
+
+ --  Bill Zaumen <bill.zaumen@gmail.com>  Mon, 20 Feb 2023 15:21:49 -0800
+
+qrlauncher (1.8) unstable; urgency=low
 
   * Added a -C option that simply prints the contents of QR codes
     on standard output.

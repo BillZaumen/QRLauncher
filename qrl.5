@@ -64,6 +64,17 @@ read those.
 .TP
 .B QRCode.file
 The name of the file for the QR Code that will be generated.
+.TP
+.BI Label\  LABEL
+A label
+.I LABEL
+will appear below the generated QR code.  If not present or an empty
+string, no label will appear in the generated image.
+.TP
+.BI FontSize\  FONTSIZE
+The font size used to print a label will be set to
+.IR FONTSIZE .
+If not provided, a default font size will be used.
 .PP
 While files using this format can be easily created using a
 text editor, it will usually be more convenient to use the

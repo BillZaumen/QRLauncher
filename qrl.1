@@ -273,6 +273,54 @@ which is any CSS color as described in <https://www.w3.org/TR/css-color-3/>.
 The background color will be set to
 .BR COLOR ,
 which is any CSS color as described in <https://www.w3.org/TR/css-color-3/>.
+.TP
+.BI \-\-label\  LABEL
+The argument
+.I LABEL
+will be be printed below the QR code.  If
+.I LABEL
+is an empty string or if this option is missing, no label is added.
+The
+.B \-\-label
+option is useful in conjunction with the
+.B \-C
+option when QR codes are printed instead of kept in a file, as there
+is some indication of how to order the images to aid in putting each
+image in an appropriately named file.  For example, the gpg option
+\-\-export\-secret\-keys with \-\-armor will print a GPG secret key
+but the text is too large for a QR code.  The output, however, can be
+split using the
+.B split
+command to get files name key.aa, key,ab, etc., and each of those can
+be converted into a corresponding QR code stored in files such as
+key.aa.png, key.ab.png, etc. Adding a label indicating the file name
+is useful when these files are printed for off-line storage:
+.br
+.sp 1
+.B \ \ \ \ for i in key.??
+.br
+.B \ \ \ \ \ \ \ do qrl -i $i -o $i.png --label $i.png --fontSize 48
+.br
+.B \ \ \ \ done
+.br
+.sp 1
+Then
+.B qrl
+can restore the original key by running the command
+.br
+.sp 1
+.B \ \ \ \ qrl -C key.??.png > key
+.br
+.TP
+.BI \-\-fontSize\  SIZE
+The argument
+.I SIZE
+must be a positive integer giving the font size for the label provided
+by the
+.B \-\-label
+option.  If the
+.B \-\-fontSize
+option is missing, a default size is used.
 .PP
 The options for listing information about colors and format names are
 the following:
@@ -369,4 +417,4 @@ QR codes.
 \"  LocalWords:  svg libosgbatik svgz gzip PostScript EPS eps epsi fB
 \"  LocalWords:  RRGGBB ffffff rgb fIRED fIGREEEN fIBLUE rgba fIALPHA
 \"  LocalWords:  hsl fISATURATION hsla fILIGHTNESS fIHUE fICONF CONF
-\"  LocalWords:  ZXing gethdrs QRLauncher
+\"  LocalWords:  ZXing gethdrs QRLauncher fontSize gpg aa sp

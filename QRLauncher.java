@@ -9,6 +9,9 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
+import java.awt.font.FontRenderContext;
+import java.awt.font.LineMetrics;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -47,6 +50,8 @@ import org.bzdev.swing.ExtObjTransferHandler;
 import org.bzdev.swing.FileNameCellEditor;
 import org.bzdev.swing.HtmlPane;
 import org.bzdev.swing.SimpleConsole;
+import org.bzdev.swing.TextCellEditor;
+import org.bzdev.swing.WholeNumbTextField;
 import org.bzdev.swing.table.CSSTableCellRenderer;
 
 
@@ -450,7 +455,8 @@ public class QRLauncher {
 			 String pathname,
 			 ErrorCorrectionLevel level,
 			 int width, int height,
-			 Color fgColor, Color bgColor)
+			 Color fgColor, Color bgColor,
+			 String label, int fontSize)
 	throws Exception
     {
 	Map<EncodeHintType,ErrorCorrectionLevel> map =  new HashMap<>();
@@ -476,8 +482,6 @@ public class QRLauncher {
 	    int outputHeight = Math.max(height, qrHeight);
 	    int multiple = Math.min(outputWidth / qrWidth,
 				    outputHeight / qrHeight);
-	    int leftPadding = (outputWidth - (inputWidth * multiple)) / 2;
-	    int topPadding = (outputHeight - (inputHeight * multiple)) / 2;
 
 	    if (multiple < MIN_MULT) {
 		// We got it to work with a multiple of 14 but we should
@@ -489,6 +493,14 @@ public class QRLauncher {
 		multiple = Math.min(outputWidth / qrWidth,
 				    outputHeight / qrHeight);
 	    }
+	    int leftPadding = (outputWidth - (inputWidth * multiple)) / 2;
+	    int topPadding = (outputHeight - (inputHeight * multiple)) / 2;
+	    if (label != null) {
+		if (topPadding < 2*fontSize) {
+		    topPadding += 2*fontSize;
+		    outputHeight += 4*fontSize;
+		}
+	    }
 
 	    OutputStreamGraphics osg = OutputStreamGraphics
 		.newInstance(os, outputWidth, outputHeight, iformat, true);
@@ -499,6 +511,19 @@ public class QRLauncher {
 	    }
 	    g2d.setColor(fgColor);
 	    g2d.setStroke(new BasicStroke(0.5F));
+	    int textX = -1;
+	    int textY = -1;
+	    if (label != null) {
+		Font font= new Font(Font.SANS_SERIF, Font.BOLD, fontSize);
+		g2d.setFont(font);
+		FontRenderContext frc = g2d.getFontRenderContext();
+		Rectangle2D bounds = font.getStringBounds(label, frc);
+		LineMetrics lm = font.getLineMetrics(label, frc);
+		textX = outputWidth/2 - (int)Math.round(bounds.getWidth()/2);
+		textY = outputHeight - topPadding + fontSize/2
+		    + Math.round(lm.getAscent());
+		g2d.drawString(label, textX, textY);
+	    }
 
 	    for (int inputY = 0, outputY = topPadding;
 		 inputY < inputHeight; inputY++, outputY += multiple) {
@@ -557,6 +582,7 @@ public class QRLauncher {
 	    addReservedKeys("Width", "Height", "Foreground.color",
 			    "Background.color", "ErrorCorrection.level");
 	    addReservedKeys("QRCode.imageFormat", "QRCode.file");
+	    addReservedKeys("Label", "FontSize");
 
 	    setDefaultProperty("ErrorCorrection.level", "L");
 	    setDefaultProperty("QRCode.imageFormat", "png");
@@ -606,6 +632,13 @@ public class QRLauncher {
 
 	    addRE("QRCode.file", null, outputFileEditor);
 	    changedPropertyClears("QRCode.imageFormat", "QRCode.file");
+
+	    TextCellEditor tce = new
+		TextCellEditor<String>(String.class,
+					new WholeNumbTextField());
+	    addRE("Width", null, tce);
+	    addRE("Height", null, tce);
+	    addRE("FontSize", null, tce);
 
 	    monitorProperty("QRCode.imageFormat");
 	    addConfigPropertyListener((e) -> {
@@ -684,6 +717,8 @@ public class QRLauncher {
 	String fgColor = results.getProperty("Foreground.color", "black");
 	String bgColor = results.getProperty("Background.color", "white");
 	String level = results.getProperty("ErrorCorrection.level", "L");
+	String label = results.getProperty("Label");
+	String fontSize = results.getProperty("FontSize");
 	String imageFormat = results.getProperty("QRCode.imageFormat",
 						 "png");
 	String output = results.getProperty("QRCode.file");
@@ -719,16 +754,36 @@ public class QRLauncher {
 	    
 	}
 	try {
-	    ProcessBuilder pb = new ProcessBuilder
-		(System.getProperty("qrl.cmd"),
-		 ((uri == null)? "-i": "-u"),
-		 ((uri == null)? ifile: uri),
-		 "-w", width,
-		 "-h", height,
-		 "-F", fgColor,
-		 "-B", bgColor,
-		 "-L", level,
-		 "-o", output);
+	    LinkedList<String> args = new LinkedList<>();
+	    String[] iargs = {
+		System.getProperty("qrl.cmd"),
+		((uri == null)? "-i": "-u"),
+		((uri == null)? ifile: uri),
+		"-w", width,
+		"-h", height,
+		"-F", fgColor,
+		"-B", bgColor,
+		"-L", level,
+		"-o", output};
+	    for (String s: iargs) {
+		args.add(s);
+	    }
+	    if (label != null || label.trim().length() == 0) {
+		args.add("--label");
+		args.add(label);
+		if (fontSize != null) {
+		    fontSize = fontSize.trim();
+		    while (fontSize.startsWith("0")) {
+			fontSize = fontSize.substring(1);
+		    }
+		    if(fontSize.length() > 0) {
+			args.add("--fontSize");
+			args.add(fontSize);
+		    }
+		}
+	    }
+
+	    ProcessBuilder pb = new ProcessBuilder(args);
 	    pb.inheritIO();
 	    Process p = pb.start();
 	    System.exit(p.waitFor());
@@ -771,6 +826,8 @@ public class QRLauncher {
 	int index = 0;
 	int width = 100;
 	int height = 100;
+	String label = null;
+	int fontSize = 12;
 	String uri = null;
 	String ipath = null;
 	String path = null;
@@ -959,6 +1016,34 @@ public class QRLauncher {
 		System.exit(0);
 	    } else if (argv[index].equals("-g")) {
 		config(new File(cwd), null);
+	    } else if (argv[index].equals("--label")) {
+		index++;
+		if (index >= argv.length) {
+		    System.err.println(localeString("qrl") +": "
+				       + localeString("missingLabel"));
+		    System.exit(1);
+		}
+		label = argv[index].trim();
+		if (label.length() == 0) label = null;
+	    } else if (argv[index].equals("--fontSize")) {
+		index++;
+		if (index >= argv.length) {
+		    System.err.println(localeString("qrl") +": "
+				       + localeString("missingfontSize"));
+		    System.exit(1);
+		}
+		try {
+		    fontSize = Integer.parseInt(argv[index]);
+		    if (fontSize <= 0) {
+			System.err.println(localeString("qrl") +": "
+					   + localeString("illegalFontSize"));
+			System.exit(1);
+		    }
+		} catch (NumberFormatException nfe) {
+			System.err.println(localeString("qrl") +": "
+					   + localeString("illegalFontSize"));
+			System.exit(1);
+		}
 	    } else if (argv[index].equals("--help")) {
 		showHelp();
 		// main should exit because showHelp() opens a
@@ -1018,7 +1103,7 @@ public class QRLauncher {
 		    if (trim) text = text.trim();
 		}
 		qrEncode(text, cdir, iformat, path, level, width, height,
-			 fgColor, bgColor);
+			 fgColor, bgColor, label, fontSize);
 	    } catch (Exception ex) {
 		String msg = ex.getMessage();
 		if (msg == null || msg.trim().length() == 0) {
