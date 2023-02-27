@@ -496,6 +496,31 @@ public class QRLauncher {
 	    int leftPadding = (outputWidth - (inputWidth * multiple)) / 2;
 	    int topPadding = (outputHeight - (inputHeight * multiple)) / 2;
 	    if (label != null) {
+		if (fontSize == 0) {
+		    int lastSize = 12;
+		    BufferedImage bi = new BufferedImage(outputWidth,
+							 outputHeight + 24,
+							 BufferedImage
+							 .TYPE_INT_ARGB);
+		    Graphics2D tg2d = bi.createGraphics();
+		    double lw = 0.0;
+		    double lh = 0.0;
+		    int maxLabelWidth = outputWidth - 2 * leftPadding;
+		    for(;;) {
+			Font font = new Font(Font.SANS_SERIF, Font.BOLD,
+					     fontSize);
+			tg2d.setFont(font);
+			FontRenderContext frc = tg2d.getFontRenderContext();
+			Rectangle2D bounds = font.getStringBounds(label, frc);
+			if (bounds.getHeight() > 0.1 *  outputHeight
+			    || bounds.getWidth() > maxLabelWidth) {
+			    fontSize = lastSize;
+			    break;
+			}
+			lastSize = fontSize;
+			fontSize++;
+		    }
+		}
 		if (topPadding < 2*fontSize) {
 		    topPadding += 2*fontSize;
 		    outputHeight += 4*fontSize;
@@ -768,7 +793,7 @@ public class QRLauncher {
 	    for (String s: iargs) {
 		args.add(s);
 	    }
-	    if (label != null || label.trim().length() == 0) {
+	    if (label != null && label.trim().length() > 0) {
 		args.add("--label");
 		args.add(label);
 		if (fontSize != null) {
@@ -827,7 +852,7 @@ public class QRLauncher {
 	int width = 100;
 	int height = 100;
 	String label = null;
-	int fontSize = 12;
+	int fontSize = 0;
 	String uri = null;
 	String ipath = null;
 	String path = null;
@@ -1034,7 +1059,7 @@ public class QRLauncher {
 		}
 		try {
 		    fontSize = Integer.parseInt(argv[index]);
-		    if (fontSize <= 0) {
+		    if (fontSize < 0) {
 			System.err.println(localeString("qrl") +": "
 					   + localeString("illegalFontSize"));
 			System.exit(1);
