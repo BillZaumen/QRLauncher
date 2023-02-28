@@ -189,8 +189,29 @@ The
 option is not recognized after a
 .B \-C
 option and instead is treated as a file name.
+.TP
+.B \-\-binary
+This option can be used when creating or when processing QR codes.
+When processing a QR code, it must precde a
+.B \-C
+option: otherwise it will be ignored.  This option allows binary files
+to be encoded in a QR code or retrieved from a QR code.  For encoding
+when the
+.B \-\-binary
+option is present, the input is first encoded using URL-safe base 64
+encoding without padding. Then each byte is treated as a number, 45 is
+subtracted, and that value is encoded as a two digit, base 10 number
+with a leading 0 for the values 0 to 9. This is reversed when the QR
+code is decoded. Turning each base-64 symbol into a pair of digits
+allows the QR code be be generated in numeric mode, which is the most
+efficient encoding.  The savings in space for numeric mode outweighs
+the doubling of the number of characters. This technique is used in
+the smart health card specification available at
+https://spec.smarthealth.cards.
 .P
-The options for creating QR codes are
+The options for creating QR codes (in addition to
+.BR \-\-binary )
+are
 .TP
 .BI \-u\  URI
 The URI to use as an input.
@@ -287,19 +308,20 @@ option is useful in conjunction with the
 option when QR codes are printed instead of kept in a file, as there
 is some indication of how to order the images to aid in putting each
 image in an appropriately named file.  For example, the gpg option
-\-\-export\-secret\-keys with \-\-armor will print a GPG secret key
-but the text is too large for a QR code.  The output, however, can be
+\-\-export\-secret\-keys export a GPG secret key
+but is too large for a QR code.  The output, however, can be
 split using the
 .B split
 command to get files name key.aa, key,ab, etc., and each of those can
 be converted into a corresponding QR code stored in files such as
 key.aa.png, key.ab.png, etc. Adding a label indicating the file name
-is useful when these files are printed for off-line storage:
+is useful when these files are printed for off-line storage as a
+fail-safe backup:
 .br
 .sp 1
 .B \ \ \ \ for i in key.??
 .br
-.B \ \ \ \ \ \ \ do qrl -i $i -o $i.png \-\-label $i.png \-\-fontsize 48
+.B \ \ \ \ \ \ \ do qrl -i $i -o $i.png \-\-label $i.png \-\-binary
 .br
 .B \ \ \ \ done
 .br
@@ -309,8 +331,12 @@ Then
 can restore the original key by running the command
 .br
 .sp 1
-.B \ \ \ \ qrl -C key.??.png > key
+.B \ \ \ \ qrl \-\-binary  \-C key.??.png > key
 .br
+.sp 1
+When splitting a key for a fail-safe backup, one will probably want to
+use a small chunk size so that the images can be stored in a safe-deposit
+box without folding the paper.
 .TP
 .BI \-\-fontSize\  SIZE
 The argument
@@ -320,7 +346,7 @@ by the
 .B \-\-label
 option.  If the
 .B \-\-fontSize
-option is missing, a default size that is label=dependent is used.
+option is missing, a default size that is label-dependent is used.
 .PP
 The options for listing information about colors and format names are
 the following:
@@ -437,7 +463,7 @@ space, and
 .BR  $ , % , * , + , - , . , / , : ,
 and
 .BR / .
-..TP
+.TP
 .B Binary mode
 The allowed characters are 8-bit bytes but it is safer to stay with
 printable ASCII and not UTF-8 because

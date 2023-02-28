@@ -1,3 +1,12 @@
+qrlauncher (1.10) unstable; urgency=low
+
+  * Added the --binary option and changed the handling of font sizes
+    so that, if no font size is explicitly provided or if the font size
+    is zero, an appropriate size will be computed based on the label (which
+    must be present) and image dimensions.
+
+ --  Bill Zaumen <bill.zaumen@gmail.com>  Mon, 20 Feb 2023 15:21:49 -0800
+
 qrlauncher (1.9) unstable; urgency=low
 
   * Added the --label and --fontSize options an changed some table-cell

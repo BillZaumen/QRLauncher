@@ -75,6 +75,20 @@ string, no label will appear in the generated image.
 The font size used to print a label will be set to
 .IR FONTSIZE .
 If not provided, a default font size will be used.
+.TP
+.BI Binary\  VALUE
+The value can be either
+.B true
+or
+.BR false .
+When
+.BR true ,
+a QR code will be created in binary mode: as if the
+.B qrl
+option
+.B \-\-binary
+is present.  If this property is missing, the default is
+.BR false .
 .PP
 While files using this format can be easily created using a
 text editor, it will usually be more convenient to use the

@@ -14,6 +14,8 @@ import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -30,6 +32,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -39,6 +42,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.table.TableCellRenderer;
 import org.bzdev.gio.OutputStreamGraphics;
 import org.bzdev.graphs.Colors;
 import org.bzdev.io.AppendableWriter;
@@ -87,6 +91,8 @@ public class QRLauncher {
     static boolean queryMode = false;
     static boolean exitMode = false;
     static boolean contentsOnly = false;
+    static boolean nub64 = false;
+
     static JFrame frame;
     static ExtObjTransferHandler th;
     static final String targetHTML = "<HTML><BODY>"
@@ -263,10 +269,28 @@ public class QRLauncher {
 	    } else if (contents != null) {
 		if (contentsOnly == false) {
 		    contents = " ...\n" + contents + "\n------------";
-		}
-		if (output != null) output.append(contents);
-		if (output != tc && tc != null) {
-		    tc.append(contents);
+		} else if (nub64 && contentsOnly) {
+		    if (contents.length() %2 != 0) {
+			throw new IOException(localeString("notNUB64"));
+		    }
+		    int len = contents.length() / 2;
+		    char[] carray = new char[len];
+		    for (int i = 0; i < len; i++) {
+			int j = 2*i;
+			int val = 45 + (contents.charAt(j) - '0')*10
+			    + (contents.charAt(j+1) - '0');
+			carray[i] = (char) val;
+		    }
+		    contents = new String(carray);
+		    Base64.Decoder decoder = Base64.getUrlDecoder();
+		    byte[] results = decoder.decode(contents);
+		    System.out.write(results);
+		    System.out.flush();
+		} else {
+		    if (output != null) output.append(contents);
+		    if (output != tc && tc != null) {
+			tc.append(contents);
+		    }
 		}
 	    } else if (geth && foundHttpURL) {
 		String gethPath =
@@ -607,7 +631,7 @@ public class QRLauncher {
 	    addReservedKeys("Width", "Height", "Foreground.color",
 			    "Background.color", "ErrorCorrection.level");
 	    addReservedKeys("QRCode.imageFormat", "QRCode.file");
-	    addReservedKeys("Label", "FontSize");
+	    addReservedKeys("Label", "FontSize", "Binary");
 
 	    setDefaultProperty("ErrorCorrection.level", "L");
 	    setDefaultProperty("QRCode.imageFormat", "png");
@@ -623,6 +647,39 @@ public class QRLauncher {
 		    "L", "M", "Q", "H"
 	    });
 	    addRE("level", null, new DefaultCellEditor(comboBox));
+
+	    /*
+	    JComboBox<String> binaryCB = new JComboBox<>(new String[] {
+		    "true", "false"
+		});
+	    addRE("Binary", null, new DefaultCellEditor(binaryCB));
+	    */
+	    addRE("Binary",
+		  new TableCellRenderer() {
+		      private JCheckBox cb = new JCheckBox();
+		      public Component getTableCellRendererComponent
+			  (JTable table, Object value, boolean isSelected,
+			   boolean hasFocus, int row, int col) {
+			  if (value == null) {
+			      cb.setSelected(false);
+			  } else if (value instanceof String) {
+			      String val = (String)value;
+			      val = val.trim();
+			      cb.setSelected(val.equalsIgnoreCase("true"));
+			  }
+			  return cb;
+		      }
+		  },
+		  new DefaultCellEditor(new JCheckBox()) {
+		      public Object getCellEditorValue() {
+			  Object object = super.getCellEditorValue();
+			  if (object.equals(Boolean.TRUE)) {
+			      return "true";
+			  } else {
+			      return "false";
+			  }
+		      }
+		  });
 
 	    String[] ifmts = OutputStreamGraphics.getAllImageTypes();
 	    Arrays.sort(ifmts);
@@ -747,6 +804,9 @@ public class QRLauncher {
 	String imageFormat = results.getProperty("QRCode.imageFormat",
 						 "png");
 	String output = results.getProperty("QRCode.file");
+	boolean binary = results.getProperty("Binary", "false")
+	    .equalsIgnoreCase("true");
+	
 	if (output == null) {
 	    output = JOptionPane.showInputDialog(null,
 						 localeString("outputRequest"),
@@ -806,6 +866,9 @@ public class QRLauncher {
 			args.add(fontSize);
 		    }
 		}
+	    }
+	    if (binary) {
+		args.add("--binary");
 	    }
 
 	    ProcessBuilder pb = new ProcessBuilder(args);
@@ -1069,6 +1132,8 @@ public class QRLauncher {
 					   + localeString("illegalFontSize"));
 			System.exit(1);
 		}
+	    } else if (argv[index].equals("--binary")) {
+		nub64 = true;
 	    } else if (argv[index].equals("--help")) {
 		showHelp();
 		// main should exit because showHelp() opens a
@@ -1102,6 +1167,9 @@ public class QRLauncher {
 	    }
 	    index++;
 	}
+	if (nub64 && contentsOnly == false && path == null) {
+	    nub64 = false;
+	}
 	if (ipath != null && uri != null) {
 	    System.err.println(localeString("qrl") + ": "
 			       + localeString("uriAndPath"));
@@ -1118,6 +1186,23 @@ public class QRLauncher {
 			File f = new File(ipath);
 			is = new FileInputStream(f.isAbsolute()? f:
 						 new File(cdir, ipath));
+		    }
+		    if (nub64) {
+			ByteArrayOutputStream baos =
+			    new ByteArrayOutputStream(4096);
+			is.transferTo(baos);
+			byte[] array = baos.toByteArray();
+			Base64.Encoder encoder = Base64.getUrlEncoder()
+			    .withoutPadding();
+			byte[] encoded = encoder.encode(array);
+			array = new byte[2*encoded.length];
+			for (int i = 0; i < encoded.length; i++) {
+			    byte val = (byte)(encoded[i] - 45);
+			    int j = 2*i;
+			    array[j] = (byte)('0' + val/10);
+			    array[j+1] = (byte)('0' + val % 10);
+			}
+			is = new ByteArrayInputStream(array);
 		    }
 		    InputStreamReader rd = new InputStreamReader(is, "UTF-8");
 		    StringBuffer sb = new StringBuffer();
@@ -1181,7 +1266,7 @@ public class QRLauncher {
 		    } else {
 			arg = new URI(arg).toString().substring(5);
 			uriList.add(cdir.toURI().resolve(arg));
-		    }
+	    }
 		} catch (URISyntaxException eurl) {
 		    System.err.println(localeString("badURI"));
 		}
