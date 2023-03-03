@@ -1,3 +1,9 @@
+qrlauncher (1.12) unstable; urgency=low
+
+  * Updated to fix a package issue.
+
+ --  Bill Zaumen <bill.zaumen@gmail.com>  Thu, 02 Mar 2023 22:57:42 -0800
+
 qrlauncher (1.11) unstable; urgency=low
 
   * Added the -m option to set the width and height of each 'square'

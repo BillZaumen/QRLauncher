@@ -10,7 +10,7 @@
 # packages libzxing-core-java and libzxing-javase-java.
 
 
-VERSION = 1.11
+VERSION = 1.12
 
 DATE = $(shell date -R)
 
