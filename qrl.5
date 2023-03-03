@@ -89,6 +89,25 @@ option
 .B \-\-binary
 is present.  If this property is missing, the default is
 .BR false .
+.TP
+.BI multiple.min\  VALUE
+.I VALUE
+is a non-negative integer. When 0, a suitable value will be
+choosen. Otherwise it is the minimum number of pixels for eqach sqaure
+making up a QR code.  If the width and height are set to zero, the
+width and height of the QR code are computed so that each 'square'
+making up the QR code has a width and height given by
+.I VALUE
+or (if
+.I VALUE
+is zero) the minimum that will create a readable QR code. If
+the width and height are set explicitly,
+.I VALUE
+is treated as the minium acceptable width and height of each QR code
+square, and larger values may be used to fill the specified image width
+and height.  When set, this is equivalent to using the
+.B \-m
+command-line argument.
 .PP
 While files using this format can be easily created using a
 text editor, it will usually be more convenient to use the

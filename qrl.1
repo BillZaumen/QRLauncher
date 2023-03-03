@@ -347,6 +347,28 @@ by the
 option.  If the
 .B \-\-fontSize
 option is missing, a default size that is label-dependent is used.
+.TP
+.BI \-m\  VALUE
+.I VALUE
+is a non-negative integer. When zero, a suitable value is computed with a
+goal of making the QR code as small as possible.
+Otherwise
+.I VALUE
+is the minimum number of pixels along the edge of each light or dark square
+in a QR code. When the
+.B \-w
+and
+.B \-h
+options are missing, the image width and height are set to the minimum
+values that can contain the QR code.  When present, the number of
+pixels along the edge of each light or dark square in the QR code will
+be at least
+.IR VALUE :
+larger if needed for the QR code to fill as much of the available space
+as possible, but if necessary, the image width or height may be increased
+so that  the number of pixels along the edge of each QR code square will
+be
+.IR VALUE.
 .PP
 The options for listing information about colors and format names are
 the following:
@@ -469,6 +491,19 @@ The allowed characters are 8-bit bytes but it is safer to stay with
 printable ASCII and not UTF-8 because
 .B qrl
 does not currently allow one to specify a character set.
+.SH IMAGE SCALING
+Images produced by
+.B qrl
+use the Java class library for writing images in formats such as PNG or
+JPEG. The images can sometimes be reduced in size by using software
+such as GIMP. Emperically GIMP seems to do better than ImageMagick programs
+such as convert.  If this is done, the image produced should be passed to
+.B qrl
+to make sure that the result is readable.  When used to create fail-safe
+backups of small important files such as gpg private keys, testing the
+whole process (creating the images, printing them, and reading them back
+in) should be tested in case printing or the use of a camera reduces
+image quality.
 .SH AUTHOR
 .PP
 Written by Bill Zaumen, using the ZXing library for decoding and generating

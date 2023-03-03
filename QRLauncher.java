@@ -105,6 +105,17 @@ public class QRLauncher {
     private static final int QUIET_ZONE_SIZE = 4;
     
     static LinkedList<URI> uriList = new LinkedList<>();
+
+    static String decodeImage(BufferedImage bufferedImage)
+	throws NotFoundException
+    {
+	    LuminanceSource source = new
+		BufferedImageLuminanceSource(bufferedImage);
+	    BinaryBitmap bitmap =
+		new BinaryBitmap(new HybridBinarizer(source));
+	    return (new MultiFormatReader().decode(bitmap)).getText();
+    }
+
     static void doAdd(URL url) throws IOException {
 	try {
 	    if (contentsOnly == false) {
@@ -118,12 +129,7 @@ public class QRLauncher {
 	    String contents = null;
 	    InputStream is = (url == null)? System.in: url.openStream();
 	    BufferedImage bufferedImage = ImageIO.read(is);
-	    LuminanceSource source = new
-		BufferedImageLuminanceSource(bufferedImage);
-	    BinaryBitmap bitmap =
-		new BinaryBitmap(new HybridBinarizer(source));
-	    String uri = (new MultiFormatReader().decode(bitmap))
-		.getText();
+	    String uri = decodeImage(bufferedImage);
 	    URI u = null;
 	    boolean foundHttpURL = false;
 	    try {
@@ -471,7 +477,43 @@ public class QRLauncher {
         g2d.drawRect(x, y, w, h);
     }
 
-    private static int MIN_MULT = 16;
+    // tests indicate that this seems to work with MIN_MULT = 8
+    private static int MIN_MULT = /*16*/8;
+
+
+    static void encodeImage(Graphics2D g2d, ByteMatrix input,
+			    int inputWidth, int inputHeight,
+			    int outputWidth, int outputHeight,
+			    int leftPadding, int topPadding,
+			    Color bgColor, Color fgColor,
+			    int multiple)
+    {
+	if (bgColor != null && bgColor.getAlpha() != 0) {
+	    g2d.setColor(bgColor);
+	    drawRect(g2d, 0, 0, outputWidth, outputHeight);
+	}
+	g2d.setColor(fgColor);
+	for (int inputY = 0, outputY = topPadding;
+	     inputY < inputHeight; inputY++, outputY += multiple) {
+	    // Write the contents of this row of the barcode
+	    int n = 1;
+	    for (int inputX = 0, outputX = leftPadding;
+		 inputX < inputWidth; /*inputX++,*/ outputX += n*multiple) {
+		if (input.get(inputX, inputY) == 1) {
+		    n = 0;
+		    while (inputX < inputWidth
+			   && input.get(inputX, inputY) == 1) {
+			n++;
+			inputX++;
+		    }
+		    drawRect(g2d, outputX, outputY, n*multiple, multiple);
+		} else {
+		    n = 1;
+		    inputX++;
+		}
+	    }
+	}
+    }
 
 
     static void qrEncode(String text, File cdir,
@@ -480,7 +522,8 @@ public class QRLauncher {
 			 ErrorCorrectionLevel level,
 			 int width, int height,
 			 Color fgColor, Color bgColor,
-			 String label, int fontSize)
+			 String label, int fontSize,
+			 int minMultiple)
 	throws Exception
     {
 	Map<EncodeHintType,ErrorCorrectionLevel> map =  new HashMap<>();
@@ -502,23 +545,57 @@ public class QRLauncher {
 	    int inputHeight = input.getHeight();
 	    int qrWidth = inputWidth + (QUIET_ZONE_SIZE * 2);
 	    int qrHeight = inputHeight + (QUIET_ZONE_SIZE * 2);
-	    int outputWidth = Math.max(width, qrWidth);
-	    int outputHeight = Math.max(height, qrHeight);
-	    int multiple = Math.min(outputWidth / qrWidth,
-				    outputHeight / qrHeight);
-
-	    if (multiple < MIN_MULT) {
-		// We got it to work with a multiple of 14 but we should
-		// leave a safety margin
-		int m1 = outputWidth /qrWidth;
-		int m2 = outputHeight /qrHeight;
-		if (m1 < MIN_MULT) outputWidth += (MIN_MULT-m1)*qrWidth;
-		if (m2 < MIN_MULT) outputHeight += (MIN_MULT-m2)*qrHeight;
+	    int outputWidth, outputHeight, multiple;
+	    int leftPadding, topPadding;
+	    boolean loop = (minMultiple == 0);
+	    boolean zeroWidth = (width == 0);
+	    boolean zeroHeight = (height == 0);
+	    if (loop) minMultiple = 2;
+	    System.out.println("qrWidth = " + qrWidth);
+	    System.out.println("qrHeight = " + qrHeight);
+	    do {
+		if (zeroWidth) width = inputWidth*minMultiple;
+		if (zeroHeight) height = inputHeight*minMultiple;
+		outputWidth = Math.max(width, qrWidth);
+		outputHeight = Math.max(height, qrHeight);
 		multiple = Math.min(outputWidth / qrWidth,
 				    outputHeight / qrHeight);
-	    }
-	    int leftPadding = (outputWidth - (inputWidth * multiple)) / 2;
-	    int topPadding = (outputHeight - (inputHeight * multiple)) / 2;
+
+		if (multiple < minMultiple) {
+		    int m1 = outputWidth /qrWidth;
+		    int m2 = outputHeight /qrHeight;
+		    if (m1 < minMultiple) {
+			outputWidth += (minMultiple-m1)*qrWidth;
+		    }
+		    if (m2 < minMultiple) {
+			outputHeight += (minMultiple-m2)*qrHeight;
+		    }
+		    multiple = Math.min(outputWidth / qrWidth,
+					outputHeight / qrHeight);
+		}
+		leftPadding = (outputWidth - (inputWidth * multiple)) / 2;
+		topPadding = (outputHeight - (inputHeight * multiple)) / 2;
+		if (loop) {
+		    BufferedImage bi = new BufferedImage(outputWidth,
+							 outputHeight,
+							 BufferedImage
+							 .TYPE_INT_ARGB);
+		    Graphics2D tg2d = bi.createGraphics();
+		    encodeImage(tg2d, input, inputWidth, inputHeight,
+				outputWidth, outputHeight,
+				leftPadding, topPadding,
+				bgColor, fgColor, multiple);
+		    tg2d.dispose();
+		    try {
+			decodeImage(bi);
+			loop = false;
+		    } catch (Exception e) {
+			minMultiple++;
+			if (minMultiple > 16) throw e;
+		    }
+		}
+	    } while (loop);
+
 	    if (label != null) {
 		if (fontSize == 0) {
 		    int lastSize = 12;
@@ -544,6 +621,7 @@ public class QRLauncher {
 			lastSize = fontSize;
 			fontSize++;
 		    }
+		    tg2d.dispose();
 		}
 		if (topPadding < 2*fontSize) {
 		    topPadding += 2*fontSize;
@@ -554,11 +632,11 @@ public class QRLauncher {
 	    OutputStreamGraphics osg = OutputStreamGraphics
 		.newInstance(os, outputWidth, outputHeight, iformat, true);
 	    Graphics2D g2d = osg.createGraphics();
-	    if (bgColor != null && bgColor.getAlpha() != 0) {
-		g2d.setColor(bgColor);
-		drawRect(g2d, 0, 0, outputWidth, outputHeight);
-	    }
-	    g2d.setColor(fgColor);
+	    encodeImage(g2d, input, inputWidth, inputHeight,
+			outputWidth, outputHeight,
+			leftPadding, topPadding,
+			bgColor, fgColor,
+			multiple);
 	    g2d.setStroke(new BasicStroke(0.5F));
 	    int textX = -1;
 	    int textY = -1;
@@ -573,19 +651,9 @@ public class QRLauncher {
 		    + Math.round(lm.getAscent());
 		g2d.drawString(label, textX, textY);
 	    }
-
-	    for (int inputY = 0, outputY = topPadding;
-		 inputY < inputHeight; inputY++, outputY += multiple) {
-		// Write the contents of this row of the barcode
-		for (int inputX = 0, outputX = leftPadding;
-		     inputX < inputWidth; inputX++, outputX += multiple) {
-		    if (input.get(inputX, inputY) == 1) {
-			drawRect(g2d, outputX, outputY, multiple, multiple);
-		    }
-		}
-	    }
 	    osg.flush();
 	    osg.imageComplete();
+	    g2d.dispose();
 	} else {
 	    throw new IOException(localeString("missingSuffix"));
 	}
@@ -631,7 +699,7 @@ public class QRLauncher {
 	    addReservedKeys("Width", "Height", "Foreground.color",
 			    "Background.color", "ErrorCorrection.level");
 	    addReservedKeys("QRCode.imageFormat", "QRCode.file");
-	    addReservedKeys("Label", "FontSize", "Binary");
+	    addReservedKeys("Label", "FontSize", "Binary", "multiple.min");
 
 	    setDefaultProperty("ErrorCorrection.level", "L");
 	    setDefaultProperty("QRCode.imageFormat", "png");
@@ -721,6 +789,7 @@ public class QRLauncher {
 	    addRE("Width", null, tce);
 	    addRE("Height", null, tce);
 	    addRE("FontSize", null, tce);
+	    addRE("multiple.min", null, tce);
 
 	    monitorProperty("QRCode.imageFormat");
 	    addConfigPropertyListener((e) -> {
@@ -794,8 +863,8 @@ public class QRLauncher {
 	editor.edit(null, ConfigPropertyEditor.Mode.MODAL, null,
 		    ConfigPropertyEditor.CloseMode.BOTH);
 	Properties results = editor.getDecodedProperties();
-	String width = results.getProperty("Width", "100");
-	String height = results.getProperty("Height", "100");
+	String width = results.getProperty("Width", "0");
+	String height = results.getProperty("Height", "0");
 	String fgColor = results.getProperty("Foreground.color", "black");
 	String bgColor = results.getProperty("Background.color", "white");
 	String level = results.getProperty("ErrorCorrection.level", "L");
@@ -806,6 +875,10 @@ public class QRLauncher {
 	String output = results.getProperty("QRCode.file");
 	boolean binary = results.getProperty("Binary", "false")
 	    .equalsIgnoreCase("true");
+	String minmult = results.getProperty("multiple.min", "0");
+	if (minmult.equals("0")) {
+	    minmult = null;
+	}
 	
 	if (output == null) {
 	    output = JOptionPane.showInputDialog(null,
@@ -870,6 +943,10 @@ public class QRLauncher {
 	    if (binary) {
 		args.add("--binary");
 	    }
+	    if (minmult != null) {
+		args.add ("-m");
+		args.add(minmult);
+	    }
 
 	    ProcessBuilder pb = new ProcessBuilder(args);
 	    pb.inheritIO();
@@ -912,8 +989,9 @@ public class QRLauncher {
 
     public static void main(String argv[]) throws Exception {
 	int index = 0;
-	int width = 100;
-	int height = 100;
+	int width = 0;
+	int height = 0;
+	int minMult = 0;
 	String label = null;
 	int fontSize = 0;
 	String uri = null;
@@ -1104,6 +1182,25 @@ public class QRLauncher {
 		System.exit(0);
 	    } else if (argv[index].equals("-g")) {
 		config(new File(cwd), null);
+	    } else if (argv[index].equals("-m")) {
+		index++;
+		if (index >= argv.length) {
+		    System.err.println(localeString("qrl") +": "
+				       + localeString("missingMult"));
+		    System.exit(1);
+		}
+		try {
+		    minMult = Integer.parseInt(argv[index]);
+		    if (minMult < 0) {
+			System.err.println(localeString("qrl") +": "
+					   + localeString("missingMult"));
+			System.exit(1);
+		    }
+		} catch (NumberFormatException nfe) {
+			System.err.println(localeString("qrl") +": "
+					   + localeString("missingWidth"));
+			System.exit(1);
+		}
 	    } else if (argv[index].equals("--label")) {
 		index++;
 		if (index >= argv.length) {
@@ -1213,7 +1310,7 @@ public class QRLauncher {
 		    if (trim) text = text.trim();
 		}
 		qrEncode(text, cdir, iformat, path, level, width, height,
-			 fgColor, bgColor, label, fontSize);
+			 fgColor, bgColor, label, fontSize, minMult);
 	    } catch (Exception ex) {
 		String msg = ex.getMessage();
 		if (msg == null || msg.trim().length() == 0) {

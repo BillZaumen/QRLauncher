@@ -1,3 +1,13 @@
+qrlauncher (1.11) unstable; urgency=low
+
+  * Added the -m option to set the width and height of each 'square'
+    in a QR code to either a specified value.  If the -m, -w, and -h
+    options are missing, the software will try to create as small a
+    readable QR code as feasible. Especially for SVG, the way the
+    QR code is written was changed in an attempt to create smaller files.
+
+ --  Bill Zaumen <bill.zaumen@gmail.com>  Thu, 02 Mar 2023 22:57:42 -0800
+
 qrlauncher (1.10) unstable; urgency=low
 
   * Added the --binary option and changed the handling of font sizes
