@@ -1,3 +1,9 @@
+qrlauncher (1.13) unstable; urgency=low
+
+  * Removed debugging print statements.
+
+ --  Bill Zaumen <bill.zaumen@gmail.com>  Sun, 05 Mar 2023 22:52:41 -0800
+
 qrlauncher (1.12) unstable; urgency=low
 
   * Updated to fix a package issue.

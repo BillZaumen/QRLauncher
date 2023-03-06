@@ -551,8 +551,6 @@ public class QRLauncher {
 	    boolean zeroWidth = (width == 0);
 	    boolean zeroHeight = (height == 0);
 	    if (loop) minMultiple = 2;
-	    System.out.println("qrWidth = " + qrWidth);
-	    System.out.println("qrHeight = " + qrHeight);
 	    do {
 		if (zeroWidth) width = inputWidth*minMultiple;
 		if (zeroHeight) height = inputHeight*minMultiple;
