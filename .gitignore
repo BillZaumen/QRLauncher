@@ -3,6 +3,7 @@ BUILD/
 classes/
 qrlauncher.jar
 qrlauncher_*_all.deb
+qrlauncher-pop-icons_*_all.deb
 qrlauncher-install-*.jar
 inst/qrlauncher-install.jar
 inst/TBUILD
