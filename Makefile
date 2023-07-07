@@ -82,7 +82,7 @@ release: qrlauncher.jar $(DEB) newpopchangelog $(POP_DEB) \
 
 qrlauncher.jar: QRLauncher.java QRLauncher.svg dndTarget.png
 	mkdir -p classes
-	javac -Xlint:unchecked -d classes -classpath $(CP) QRLauncher.java
+	javac --release 11  -d classes -classpath $(CP) QRLauncher.java
 	for i in $(ICON_WIDTHS) ; do \
 		inkscape -w $$i \
 		--export-filename=classes/QRLauncher$${i}.png \
