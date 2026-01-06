@@ -25,7 +25,7 @@ following commands:
 curl https://billzaumen.github.io/bzdev/setup.sh | sh
 sudo apt-get update
 sudo apt install qrlauncher
-sudo apt isntall libosgbatik-java
+sudo apt install libosgbatik-java
 ```
 
 The file setup.sh contains commands for configuring apt to use the
